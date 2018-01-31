@@ -1,0 +1,26 @@
+image: Visual Studio 2017
+
+branches:
+  except:
+  - experimental
+
+init:
+  - git config --global core.autocrlf true
+
+version: 1.0.{build}
+
+before_build:
+  - dotnet --info
+  - dotnet restore
+
+build_script:
+  - dotnet build src\Aqua.AccessControl
+  - dotnet build test\Aqua.AccessControl.Tests
+  - dotnet build test\Aqua.AccessControl.Tests.SQLite.EF6
+
+test_script:
+  - dotnet test test\Aqua.AccessControl.Tests\Aqua.AccessControl.Tests.csproj
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6\Aqua.AccessControl.Tests.SQLite.EF6.csproj
+
+build:
+  verbosity: normal

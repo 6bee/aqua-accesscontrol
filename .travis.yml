@@ -1,0 +1,36 @@
+language: generic  
+
+branches:
+  except:
+  - experimental
+
+addons:  
+  apt:
+    packages:
+    - gettext
+    - libcurl4-openssl-dev
+    - libicu-dev
+    - libssl-dev
+    - libunwind8
+    - zlib1g
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Release
+    - os: osx
+      env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Release
+
+install:  
+  - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
+  - curl -sSL "https://raw.githubusercontent.com/dotnet/cli/v$CLI_VERSION/scripts/obtain/dotnet-install.sh" | bash /dev/stdin --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - export PATH="$DOTNET_INSTALL_DIR:$PATH" 
+
+before_script:  
+  - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
+  - dotnet --info
+
+script: 
+  - dotnet test ./test/Aqua.AccessControl.Tests/Aqua.AccessControl.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"

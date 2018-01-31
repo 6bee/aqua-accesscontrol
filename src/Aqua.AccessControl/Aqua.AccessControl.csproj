@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>[Experimental] Query filters for linq expressions</Description>
+    <Copyright>Copyright © Christof Senn 2018</Copyright>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>Christof Senn</Authors>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <AssemblyName>Aqua.AccessControl</AssemblyName>
+    <PackageId>aqua-accesscontrol</PackageId>
+    <PackageTags></PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/6bee/aqua-accesscontrol/master/aqua-small.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/6bee/aqua-accesscontrol</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/6bee/aqua-accesscontrol/master/license.txt</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/6bee/aqua-accesscontrol.git</RepositoryUrl>
+    <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>true</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  
+</Project>
