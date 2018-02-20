@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS [OrderItems](
                 context.SaveChanges();
                 context.Claims.AddRange(source.Claims);
                 context.SaveChanges();
-                context.ProductCateries.AddRange(source.ProductCategories);
+                context.ProductCategories.AddRange(source.ProductCategories);
                 context.SaveChanges();
                 context.Products.AddRange(source.Products);
                 context.SaveChanges();
@@ -172,12 +172,12 @@ CREATE TABLE IF NOT EXISTS [OrderItems](
         public virtual DbSet<Tenant> Tenants { get; set; }
         public virtual DbSet<Claim> Claims { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<ProductCategory> ProductCateries { get; set; }
+        public virtual DbSet<ProductCategory> ProductCategories { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
 
         IQueryable<Tenant> IDataProvider.Tenants => Tenants;
         IQueryable<Claim> IDataProvider.Claims => Claims;
-        IQueryable<ProductCategory> IDataProvider.ProductCategories => ProductCateries;
+        IQueryable<ProductCategory> IDataProvider.ProductCategories => ProductCategories;
         IQueryable<Product> IDataProvider.Products => Products;
         IQueryable<Order> IDataProvider.Orders => Orders;
     }

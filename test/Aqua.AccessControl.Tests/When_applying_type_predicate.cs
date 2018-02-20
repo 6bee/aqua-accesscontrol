@@ -35,7 +35,7 @@ namespace Aqua.AccessControl.Tests
         public void Should_appy_predicate_to_child_collection_items()
         {
             var repo = DataProvider;
-  
+
             // TODO: for non in-memory tests: select order instead of orderitem and assert items do match predicate
             var query =
                 from o in repo.Orders
