@@ -33,8 +33,30 @@ namespace Aqua.AccessControl.Predicates
                     return whereExpression;
                 }
 
-                var castExpression = Expression.Call(GetCastMethodInfo(isQueryable, type), whereExpression);
-                return castExpression;
+                //if (expression.Type.IsAssignableFrom(whereExpression.Type))
+                //{
+                //    return whereExpression;
+                //}
+
+                //if (whereExpression.Type.IsAssignableFrom(expression.Type))
+                //{
+                //    return whereExpression;
+                //}
+
+                else
+                {
+                    var e1 = TypeHelper.GetElementType(whereExpression.Type);
+                    //var e2 = TypeHelper.GetElementType(expression.Type);
+                    if (e1 == type)
+                    {
+                        return whereExpression;
+                    }
+                    else
+                    {
+                        var castExpression = Expression.Call(GetCastMethodInfo(isQueryable, type), whereExpression);
+                        return castExpression;
+                    }
+                }
             }
         }
 
@@ -59,6 +81,15 @@ namespace Aqua.AccessControl.Predicates
             var defaultValue = Expression.Lambda(Expression.Default(propertyType)).Compile().DynamicInvoke();
             var ifFalse = Expression.Constant(defaultValue, propertyType);
             return Expression.Condition(test, ifTrue, ifFalse, propertyType);
+        }
+
+        internal static Expression GetPredicate(ITypePredicate typePredicate, Expression expression)
+        {
+            var predicate = typePredicate.Predicate;
+            var parameterMap = new Dictionary<ParameterExpression, Expression>() { { predicate.Parameters.Single(), expression } };
+            var parameterReplacer = new ReplaceParameterExpressionVisitor(parameterMap);
+            var test = parameterReplacer.Visit(predicate.Body);
+            return test;
         }
     }
 }

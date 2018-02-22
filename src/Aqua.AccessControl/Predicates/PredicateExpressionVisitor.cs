@@ -59,6 +59,9 @@ namespace Aqua.AccessControl.Predicates
                 private readonly Scope _parent;
                 private readonly Visitor _visitor;
                 private readonly Dictionary<Expression, Expression> _substitutes;
+                private readonly Dictionary<Expression, bool> _isSubstituted;
+                private readonly List<Expression> _filterExpressions = new List<Expression>();
+                private bool _isSelect = false;
 
                 public Scope(Visitor visitor)
                     : this(null, visitor)
@@ -68,20 +71,33 @@ namespace Aqua.AccessControl.Predicates
                 private Scope(Scope parent, Visitor visitor)
                 {
                     _substitutes = new Dictionary<Expression, Expression>(ReferenceEqualityComparer<Expression>.Instance);
+                    _isSubstituted = new Dictionary<Expression, bool>(ReferenceEqualityComparer<Expression>.Instance);
                     _parent = parent;
                     _visitor = visitor;
                     _visitor._scope = this;
                 }
 
+                public bool IsSelectScope => _isSelect || (_parent?.IsSelectScope ?? false);
+
                 public void Dispose()
+                    => _visitor._scope = _parent;
+
+                public Scope Push()
+                    => new Scope(this, _visitor);
+
+                public IDisposable PushSubstitute(Expression expression, MethodCallExpression node)
                 {
-                    _visitor._scope = _parent;
+                    var scope = Push();
+                    scope._substitutes[expression] = node;
+                    return scope;
                 }
 
-                internal IDisposable PushSubstitute(Expression expression, MethodCallExpression node)
+                internal IDisposable PushMethodCall(MethodCallExpression node)
                 {
-                    var scope = new Scope(this, _visitor);
-                    scope._substitutes[expression] = node;
+                    var scope = Push();
+                    scope._isSelect = 
+                        node.Method.DeclaringType == typeof(Queryable)  &&
+                        string.Equals(node.Method.Name, nameof(Queryable.Select));
                     return scope;
                 }
 
@@ -89,14 +105,57 @@ namespace Aqua.AccessControl.Predicates
                 {
                     if (_substitutes.TryGetValue(expression, out Expression exp))
                     {
-                        IsSubstituted = true;
+                        _isSubstituted[expression] = true;
                         return exp;
                     }
 
                     return _parent?.GetSubstitute(expression) ?? expression;
                 }
 
-                public bool IsSubstituted { get; private set; }
+                public bool IsSubstituted(Expression expression) 
+                    => _isSubstituted.ContainsKey(expression);
+
+                public void PutFilterBeforeSelect(Expression filterExpression)
+                {
+                    if (_isSelect)
+                    {
+                        _filterExpressions.Add(filterExpression);
+                    }
+                    else
+                    {
+                        _parent.PutFilterBeforeSelect(filterExpression);
+                    }
+                }
+
+                public MethodCallExpression PrependFilters(MethodCallExpression node)
+                {
+                    if (_isSelect && _filterExpressions.Any())
+                    {
+                        var quoteExpression = node.Arguments.Last() as UnaryExpression;
+                        if (quoteExpression?.NodeType != ExpressionType.Quote)
+                        {
+                            throw new Exception("unable to retrieve parameter");
+                        }
+
+                        var parameter = (quoteExpression.Operand as LambdaExpression).Parameters.Single();
+
+                        var select = node;
+                        var queryable = select.Arguments.First();
+                        var elementType = TypeHelper.GetElementType(queryable.Type);
+                        var where = MethodInfos.Queryable.Where(elementType);
+                        foreach (var filter in _filterExpressions)
+                        {
+                            var predicate = Expression.Lambda(filter, parameter);
+                            queryable = Expression.Call(where, queryable, predicate);
+                        }
+
+                        var arguments = select.Arguments.ToList();
+                        arguments[0] = queryable;
+                        node = select.Update(null, arguments);
+                    }
+
+                    return node;
+                }
             }
 
             private Scope _scope;
@@ -136,37 +195,19 @@ namespace Aqua.AccessControl.Predicates
                     using (_scope.PushSubstitute(node.Object, node))
                     {
                         var expression = Visit(node.Object);
-                        if (_scope.IsSubstituted)
+                        if (_scope.IsSubstituted(node.Object))
                         {
+                            // TODO: what about the method call and potential arguments?
                             return expression;
                         }
                     }
                 }
 
-                var exp = (MethodCallExpression)base.VisitMethodCall(node);
-                exp = AddWhereConditionIfRequired(exp);
-                return exp;
-            }
-
-            private MethodCallExpression AddWhereConditionIfRequired(MethodCallExpression node)
-            {
-                if (node.Method.DeclaringType == typeof(Queryable) && string.Equals(node.Method.Name, nameof(Queryable.Select)))
+                using (_scope.PushMethodCall(node))
                 {
-                    var quoteExpression = node.Arguments.Last() as UnaryExpression;
-                    if (quoteExpression?.NodeType == ExpressionType.Quote)
-                    {
-                        var selectedType = (quoteExpression.Operand as LambdaExpression)?.ReturnType;
-                        if (selectedType != null && GetTypePredicates(selectedType).Any())
-                        {
-                            var where = MethodInfos.Queryable.Where(selectedType);
-                            var x = Expression.Parameter(selectedType, "x");
-                            var notNull = Expression.Lambda(Expression.NotEqual(x, Expression.Constant(null, selectedType)), x);
-                            return Expression.Call(where, node, notNull);
-                        }
-                    }
+                    var exp = (MethodCallExpression)base.VisitMethodCall(node);
+                    return _scope.PrependFilters(exp);
                 }
-
-                return node;
             }
 
             protected override Expression VisitConstant(ConstantExpression node)
@@ -217,7 +258,15 @@ namespace Aqua.AccessControl.Predicates
 
                         foreach (var typeFilter in typePredicates)
                         {
-                            expression = TypePredicateHelper.Apply(typeFilter, expression, type, isSingleElement);
+                            if (isSingleElement && _scope.IsSelectScope)
+                            {
+                                var filterExpression = TypePredicateHelper.GetPredicate(typeFilter, expression);
+                                _scope.PutFilterBeforeSelect(filterExpression);
+                            }
+                            else
+                            {
+                                expression = TypePredicateHelper.Apply(typeFilter, expression, type, isSingleElement);
+                            }
                         }
 
                         if (propertyProjections.Any())

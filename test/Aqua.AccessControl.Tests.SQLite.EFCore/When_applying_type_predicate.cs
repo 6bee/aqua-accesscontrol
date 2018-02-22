@@ -1,4 +1,4 @@
-﻿namespace Aqua.AccessControl.Tests.SQLite.EF6
+﻿namespace Aqua.AccessControl.Tests.SQLite.EFCore
 {
     using Aqua.AccessControl.Predicates;
     using Aqua.AccessControl.Tests.DataModel;
@@ -29,7 +29,7 @@
                 .ProductId.ShouldBe(110);
         }
 
-        [Fact(Skip = "APPLY joins are not supported with EF6")]
+        [Fact]
         public void Should_apply_predicate_joining_entity_not_part_of_select()
         {
             var repo = DataProvider;
@@ -49,7 +49,7 @@
                 .ProductId.ShouldBe(110);
         }
 
-        [Fact(Skip = "APPLY joins are not supported with EF6")]
+        [Fact]
         public void Should_apply_predicate_joining_additional_entities_not_part_of_basic_query()
         {
             var repo = DataProvider;

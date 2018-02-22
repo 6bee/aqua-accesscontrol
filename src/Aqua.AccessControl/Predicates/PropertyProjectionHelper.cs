@@ -10,11 +10,11 @@ namespace Aqua.AccessControl.Predicates
 
     internal static class PropertyProjectionHelper
     {
-        private sealed class MemnberEqualityComparer : IEqualityComparer<MemberInfo>
+        private sealed class MemberEqualityComparer : IEqualityComparer<MemberInfo>
         {
-            public static readonly MemnberEqualityComparer Instance = new MemnberEqualityComparer();
+            public static readonly MemberEqualityComparer Instance = new MemberEqualityComparer();
 
-            private MemnberEqualityComparer()
+            private MemberEqualityComparer()
             {
             }
 
@@ -35,7 +35,7 @@ namespace Aqua.AccessControl.Predicates
 
         internal static Expression Apply(IEnumerable<IPropertyProjection> propertyProjections, Expression expression, Type type)
         {
-            var projections = propertyProjections.ToDictionary(x => x.Property, x => x.Projection, MemnberEqualityComparer.Instance);
+            var projections = propertyProjections.ToDictionary(x => x.Property, x => x.Projection, MemberEqualityComparer.Instance);
             var lambda = GetTypeProjection(type, projections);
             return Expression.Call(GetMethodInfo(expression, type), expression, lambda);
         }

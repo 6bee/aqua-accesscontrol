@@ -1,8 +1,8 @@
-﻿namespace Aqua.AccessControl.Tests.SQListe.EFCore
+﻿namespace Aqua.AccessControl.Tests.SqlServer.EFCore
 {
-    public class SQLiteDataSeeder
+    public class SqlServerDataSeeder
     {
-        public void Seed(SQLiteDataProvider context)
+        public void Seed(SqlServerDataContext context)
         {
             using (var source = new InMemoryDataProvider())
             {

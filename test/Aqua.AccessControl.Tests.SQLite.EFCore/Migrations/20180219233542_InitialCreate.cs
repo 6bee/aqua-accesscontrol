@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Aqua.AccessControl.Tests.SQListe.EFCore.Migrations
+namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
 {
     public partial class InitialCreate : Migration
     {
