@@ -34,3 +34,4 @@ before_script:
 
 script: 
   - dotnet test ./test/Aqua.AccessControl.Tests/Aqua.AccessControl.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  - dotnet test ./test/Aqua.AccessControl.Tests.SQLite.EFCore/Aqua.AccessControl.Tests.SQLite.EFCore.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"

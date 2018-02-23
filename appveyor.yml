@@ -17,10 +17,13 @@ build_script:
   - dotnet build src\Aqua.AccessControl
   - dotnet build test\Aqua.AccessControl.Tests
   - dotnet build test\Aqua.AccessControl.Tests.SQLite.EF6
+  - dotnet build test\Aqua.AccessControl.Tests.SQLite.EFCore
+  - dotnet build test\Aqua.AccessControl.Tests.SqlServer.EFCore
 
 test_script:
   - dotnet test test\Aqua.AccessControl.Tests\Aqua.AccessControl.Tests.csproj
   - dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6\Aqua.AccessControl.Tests.SQLite.EF6.csproj
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore\Aqua.AccessControl.Tests.SQLite.EFCore.csproj
 
 build:
   verbosity: normal
