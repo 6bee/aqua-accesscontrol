@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Tests
 {
@@ -9,9 +9,13 @@ namespace Aqua.AccessControl.Tests
     public interface IDataProvider : IDisposable
     {
         IQueryable<Tenant> Tenants { get; }
+
         IQueryable<Claim> Claims { get; }
+
         IQueryable<ProductCategory> ProductCategories { get; }
+
         IQueryable<Product> Products { get; }
+
         IQueryable<Order> Orders { get; }
     }
 }

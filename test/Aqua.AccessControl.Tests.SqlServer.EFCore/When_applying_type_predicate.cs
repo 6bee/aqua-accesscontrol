@@ -1,4 +1,6 @@
-﻿namespace Aqua.AccessControl.Tests.SqlServer.EFCore
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Aqua.AccessControl.Tests.SqlServer.EFCore
 {
     using Aqua.AccessControl.Predicates;
     using Aqua.AccessControl.Tests.DataModel;
@@ -65,7 +67,7 @@
                     repo.Products.Any(p => p.Id == i.ProductId &&
                         repo.Claims.Any(c =>
                             c.TenantId == p.TenantId &&
-                            c.Type == ClaimType.EntityAccess.Read &&
+                            c.Type == ClaimTypes.EntityAccess.Read &&
                             c.Value == nameof(Product) &&
                             c.Subject == "test.user1"))))
                 .ToList();
@@ -112,16 +114,16 @@
         [Fact(Skip = "Expression of type 'System.Collections.Generic.IEnumerable`1[Aqua.AccessControl.Tests.DataModel.OrderItem]' cannot be used for return type 'System.Collections.Generic.ICollection`1[Aqua.AccessControl.Tests.DataModel.OrderItem]'")]
         public void Should_not_throw_upon_appying_predicate_to_child_collection_added_via_include()
         {
-            var repo = DataProvider;
+            // var repo = DataProvider;
 
-            var query = repo.Orders.Include(x => x.Items);
+            // var query = repo.Orders.Include(x => x.Items);
 
-            //var ex = Should.Throw<ArgumentException>(() => query.Apply(Predicate.Create<OrderItem>(x => x.Price < 1000)));
-            //ex.Message.ShouldBe("Expression of type 'System.Collections.Generic.IEnumerable`1[Aqua.AccessControl.Tests.DataModel.OrderItem]' cannot be used for return type 'System.Collections.Generic.ICollection`1[Aqua.AccessControl.Tests.DataModel.OrderItem]'");
+            // var ex = Should.Throw<ArgumentException>(() => query.Apply(Predicate.Create<OrderItem>(x => x.Price < 1000)));
+            // ex.Message.ShouldBe("Expression of type 'System.Collections.Generic.IEnumerable`1[Aqua.AccessControl.Tests.DataModel.OrderItem]' cannot be used for return type 'System.Collections.Generic.ICollection`1[Aqua.AccessControl.Tests.DataModel.OrderItem]'");
 
-            var result = query
-                .Apply(Predicate.Create<OrderItem>(x => x.Price < 1000))
-                .ToList();
+            // var result = query
+            //    .Apply(Predicate.Create<OrderItem>(x => x.Price < 1000))
+            //    .ToList();
         }
 
         [Fact]

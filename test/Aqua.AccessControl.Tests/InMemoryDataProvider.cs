@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Tests
 {
@@ -24,10 +24,10 @@ namespace Aqua.AccessControl.Tests
 
             _claims = new[]
             {
-                new Claim { Id = 1, TenantId = 1, Type = ClaimType.Tenant, Value = "1", Subject = "test.user1" },
-                new Claim { Id = 2, TenantId = 2, Type = ClaimType.Tenant, Value = "2", Subject = "test.user2" },
-                new Claim { Id = 3, TenantId = 1, Type = ClaimType.EntityAccess.Read, Value = nameof(ProductCategory), Subject = "test.user1" },
-                new Claim { Id = 4, TenantId = 1, Type = ClaimType.EntityAccess.Read, Value = nameof(Product), Subject = "test.user1" },
+                new Claim { Id = 1, TenantId = 1, Type = ClaimTypes.Tenant, Value = "1", Subject = "test.user1" },
+                new Claim { Id = 2, TenantId = 2, Type = ClaimTypes.Tenant, Value = "2", Subject = "test.user2" },
+                new Claim { Id = 3, TenantId = 1, Type = ClaimTypes.EntityAccess.Read, Value = nameof(ProductCategory), Subject = "test.user1" },
+                new Claim { Id = 4, TenantId = 1, Type = ClaimTypes.EntityAccess.Read, Value = nameof(Product), Subject = "test.user1" },
             };
 
             _productCategories = new[]
@@ -50,14 +50,22 @@ namespace Aqua.AccessControl.Tests
 
             _orders = new[]
             {
-                new Order { Id = 1000, TenantId = 1, Items = new[] {
-                    new OrderItem { Id = 1110, Quantity = 1, ProductId = 110, Price = 10m },
-                    new OrderItem { Id = 1120, Quantity = 1, ProductId = 120, Price = 100m },
-                } },
-                new Order { Id = 2000, TenantId = 2, Items = new[] {
-                    new OrderItem { Id = 2210, Quantity = 1, ProductId = 210, Price = 200m },
-                    new OrderItem { Id = 2211, Quantity = 1, ProductId = 211, Price = 2000m },
-                } },
+                new Order
+                {
+                    Id = 1000, TenantId = 1, Items = new[]
+                    {
+                        new OrderItem { Id = 1110, Quantity = 1, ProductId = 110, Price = 10m },
+                        new OrderItem { Id = 1120, Quantity = 1, ProductId = 120, Price = 100m },
+                    },
+                },
+                new Order
+                {
+                    Id = 2000, TenantId = 2, Items = new[]
+                    {
+                        new OrderItem { Id = 2210, Quantity = 1, ProductId = 210, Price = 200m },
+                        new OrderItem { Id = 2211, Quantity = 1, ProductId = 211, Price = 2000m },
+                    },
+                },
             };
 
             foreach (var order in _orders)

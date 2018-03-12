@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Tests
 {
@@ -10,11 +10,11 @@ namespace Aqua.AccessControl.Tests
 
     public class When_applying_global_predicate : PredicateTest
     {
-        const string GrantedUser = "test.user1";
-        const string NotGrantedUser = "test.user2";
+        private const string GrantedUser = "test.user1";
+        private const string NotGrantedUser = "test.user2";
 
         protected override IDataProvider DataProvider { get; } = new InMemoryDataProvider();
-        
+
         [Theory]
         [InlineData(true, 4)]
         [InlineData(false, 0)]
@@ -39,7 +39,7 @@ namespace Aqua.AccessControl.Tests
             var result = query
                 .Apply(Predicate.Create(() =>
                     DataProvider.Claims.Any(c =>
-                        c.Type == ClaimType.Tenant &&
+                        c.Type == ClaimTypes.Tenant &&
                         c.Value == "1" &&
                         c.Subject == username)))
                 .Count();

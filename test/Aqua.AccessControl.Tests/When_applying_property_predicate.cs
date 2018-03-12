@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Tests
 {
@@ -11,7 +11,7 @@ namespace Aqua.AccessControl.Tests
     public class When_applying_property_predicate : PredicateTest
     {
         protected override IDataProvider DataProvider { get; } = new InMemoryDataProvider();
-        
+
         [Fact]
         public void Should_filter_out_value_if_not_permitted_property_access()
         {
@@ -38,7 +38,7 @@ namespace Aqua.AccessControl.Tests
             var repo = DataProvider;
 
             var query = repo.Products;
-            
+
             var result = query
                 .Apply(
                     Predicate.Create<Product, decimal>(p => p.Price, p => p.TenantId == 2),

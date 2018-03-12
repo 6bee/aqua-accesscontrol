@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Tests
 {
@@ -12,7 +12,7 @@ namespace Aqua.AccessControl.Tests
     public class When_applying_property_projection : PredicateTest
     {
         protected override IDataProvider DataProvider { get; } = new InMemoryDataProvider();
-     
+
         [Fact]
         public void Should_throw_if_more_than_one_projection_is_specifdied_for_same_property()
         {
@@ -47,7 +47,7 @@ namespace Aqua.AccessControl.Tests
                 select new { p.Id, p.Price };
 
             var result = query
-                .Apply(Predicate.CreatePropertyProjection<Product, decimal>(p => p.Price, p => p.TenantId == 1 ? default(decimal) : p.Price * 2 ))
+                .Apply(Predicate.CreatePropertyProjection<Product, decimal>(p => p.Price, p => p.TenantId == 1 ? default : p.Price * 2))
                 .ToList();
 
             result.Count.ShouldBe(4);
@@ -96,7 +96,7 @@ namespace Aqua.AccessControl.Tests
                 .Apply(Predicate.CreatePropertyProjection<Product, long>(p => p.Id, p => p.TenantId))
                 .Apply(Predicate.CreatePropertyProjection<Product, decimal>(p => p.Price, p => p.TenantId))
                 .ToArray();
-            
+
             result.Length.ShouldBe(4);
             result[0].Id.ShouldBe(1L);
             result[0].Price.ShouldBe(1M);

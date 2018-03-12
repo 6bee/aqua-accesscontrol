@@ -1,17 +1,15 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Tests.SQLite.EFCore
+namespace Aqua.AccessControl.Tests
 {
     using Aqua.AccessControl.Predicates;
-    using Aqua.AccessControl.Tests.DataModel;
+    using DataModel;
     using Shouldly;
     using System.Linq;
     using Xunit;
 
-    public class When_applying_type_predicate : Tests.When_applying_type_predicate
+    public class When_applying_type_predicate_with_linq_to_object : When_applying_type_predicate
     {
-        protected override IDataProvider DataProvider { get; } = new SQLiteDataProvider();
-
         [Fact]
         public void Should_apply_predicate_to_joined_entity_not_part_of_select()
         {
@@ -74,6 +72,26 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore
             result.Count.ShouldBe(2);
             result.ShouldContain(1110);
             result.ShouldContain(1120);
+        }
+
+        [Fact]
+        public void Should_appy_predicate_to_child_collection_items()
+        {
+            var repo = DataProvider;
+
+            var query =
+                from o in repo.Orders
+                from i in o.Items
+                select i.Id;
+
+            var result = query
+                .Apply(Predicate.Create<OrderItem>(x => x.Price < 1000))
+                .ToList();
+
+            result.Count.ShouldBe(3);
+            result.ShouldContain(1110);
+            result.ShouldContain(1120);
+            result.ShouldContain(2210);
         }
     }
 }

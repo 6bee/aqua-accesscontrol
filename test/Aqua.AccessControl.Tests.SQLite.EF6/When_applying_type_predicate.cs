@@ -1,4 +1,6 @@
-﻿namespace Aqua.AccessControl.Tests.SQLite.EF6
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Aqua.AccessControl.Tests.SQLite.EF6
 {
     using Aqua.AccessControl.Predicates;
     using Aqua.AccessControl.Tests.DataModel;
@@ -64,7 +66,7 @@
                     repo.Products.Any(p => p.Id == i.ProductId &&
                         repo.Claims.Any(c =>
                             c.TenantId == p.TenantId &&
-                            c.Type == ClaimType.EntityAccess.Read &&
+                            c.Type == ClaimTypes.EntityAccess.Read &&
                             c.Value == nameof(Product) &&
                             c.Subject == "test.user1"))))
                 .ToList();

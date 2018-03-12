@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Predicates
 {
@@ -95,8 +95,8 @@ namespace Aqua.AccessControl.Predicates
                 internal IDisposable PushMethodCall(MethodCallExpression node)
                 {
                     var scope = Push();
-                    scope._isSelect = 
-                        node.Method.DeclaringType == typeof(Queryable)  &&
+                    scope._isSelect =
+                        node.Method.DeclaringType == typeof(Queryable) &&
                         string.Equals(node.Method.Name, nameof(Queryable.Select));
                     return scope;
                 }
@@ -112,7 +112,7 @@ namespace Aqua.AccessControl.Predicates
                     return _parent?.GetSubstitute(expression) ?? expression;
                 }
 
-                public bool IsSubstituted(Expression expression) 
+                public bool IsSubstituted(Expression expression)
                     => _isSubstituted.ContainsKey(expression);
 
                 public void PutFilterBeforeSelect(Expression filterExpression)
@@ -158,8 +158,8 @@ namespace Aqua.AccessControl.Predicates
                 }
             }
 
-            private Scope _scope;
             private readonly PredicateExpressionVisitor _outer;
+            private Scope _scope;
 
             public Visitor(PredicateExpressionVisitor outer)
             {

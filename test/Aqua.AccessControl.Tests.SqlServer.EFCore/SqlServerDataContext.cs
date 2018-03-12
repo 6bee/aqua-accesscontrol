@@ -1,4 +1,6 @@
-﻿namespace Aqua.AccessControl.Tests.SqlServer.EFCore
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+namespace Aqua.AccessControl.Tests.SqlServer.EFCore
 {
     using Aqua.AccessControl.Tests.DataModel;
     using Microsoft.EntityFrameworkCore;
@@ -52,8 +54,8 @@
                 from property in type.GetProperties()
                 where property.PropertyInfo?.Name == pkProperty.Name
                    && property.PropertyInfo.DeclaringType == pkProperty.DeclaringType
-                select property
-                ).ToArray();
+                select property)
+                .ToArray();
             foreach (var k in primaryKeys)
             {
                 k.ValueGenerated = ValueGenerated.Never;
@@ -61,9 +63,13 @@
         }
 
         public virtual DbSet<Tenant> Tenants { get; set; }
+
         public virtual DbSet<Claim> Claims { get; set; }
+
         public virtual DbSet<Product> Products { get; set; }
+
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
         public virtual DbSet<Order> Orders { get; set; }
     }
 }

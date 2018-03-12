@@ -1,11 +1,11 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
-
-using System.Collections.Generic;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Tests.DataModel
 {
+    using System.Collections.Generic;
+
     public class Order : AggregateRoot
     {
-        public ICollection<OrderItem> Items { set; get; }
+        public ICollection<OrderItem> Items { get; set; }
     }
 }

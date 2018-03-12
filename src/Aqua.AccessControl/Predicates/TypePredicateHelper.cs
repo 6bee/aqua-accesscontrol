@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Predicates
 {
@@ -33,29 +33,15 @@ namespace Aqua.AccessControl.Predicates
                     return whereExpression;
                 }
 
-                //if (expression.Type.IsAssignableFrom(whereExpression.Type))
-                //{
-                //    return whereExpression;
-                //}
-
-                //if (whereExpression.Type.IsAssignableFrom(expression.Type))
-                //{
-                //    return whereExpression;
-                //}
-
+                var e1 = TypeHelper.GetElementType(whereExpression.Type);
+                if (e1 == type)
+                {
+                    return whereExpression;
+                }
                 else
                 {
-                    var e1 = TypeHelper.GetElementType(whereExpression.Type);
-                    //var e2 = TypeHelper.GetElementType(expression.Type);
-                    if (e1 == type)
-                    {
-                        return whereExpression;
-                    }
-                    else
-                    {
-                        var castExpression = Expression.Call(GetCastMethodInfo(isQueryable, type), whereExpression);
-                        return castExpression;
-                    }
+                    var castExpression = Expression.Call(GetCastMethodInfo(isQueryable, type), whereExpression);
+                    return castExpression;
                 }
             }
         }

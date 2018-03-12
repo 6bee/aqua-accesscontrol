@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
                     Subject = table.Column<string>(nullable: true),
                     TenantId = table.Column<int>(nullable: false),
                     Type = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true)
+                    Value = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -28,7 +28,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false),
-                    TenantId = table.Column<int>(nullable: false)
+                    TenantId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -41,7 +41,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
                 {
                     Id = table.Column<long>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false)
+                    TenantId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -53,7 +53,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {
@@ -68,7 +68,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
                     OrderId = table.Column<long>(nullable: false),
                     Price = table.Column<decimal>(nullable: false),
                     ProductId = table.Column<long>(nullable: false),
-                    Quantity = table.Column<int>(nullable: false)
+                    Quantity = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -89,7 +89,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
                     Name = table.Column<string>(nullable: true),
                     Price = table.Column<decimal>(nullable: false),
                     ProductCategoryId = table.Column<long>(nullable: true),
-                    TenantId = table.Column<int>(nullable: false)
+                    TenantId = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {

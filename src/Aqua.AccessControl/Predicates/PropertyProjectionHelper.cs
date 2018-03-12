@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. 
+﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.AccessControl.Predicates
 {
@@ -29,7 +29,7 @@ namespace Aqua.AccessControl.Predicates
                 {
                     m.MemberType,
                     m.Name,
-                    m.DeclaringType
+                    m.DeclaringType,
                 };
         }
 
