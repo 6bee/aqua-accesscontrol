@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <Description>[Experimental] Query filters for linq expressions</Description>
-    <Copyright>Copyright © Christof Senn 2018</Copyright>
-    <VersionPrefix>0.1.0</VersionPrefix>
-    <Authors>Christof Senn</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Aqua.AccessControl</AssemblyName>
     <PackageId>aqua-accesscontrol</PackageId>
@@ -22,7 +19,6 @@
     <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>true</GenerateAssemblyFileVersionAttribute>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   
