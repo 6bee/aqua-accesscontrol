@@ -17,12 +17,8 @@ addons:
 matrix:
   include:
     - os: linux
-      dist: trusty
-      sudo: required
       env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Debug
     - os: linux
-      dist: trusty
-      sudo: required
       env: FRAMEWORK_VERSION=2.0 CLI_VERSION=Latest CONFIGURATION=Release
     - os: osx
       env: FRAMEWORK_VERSION=2.0 CLI_VERSION=2.1.4 CONFIGURATION=Debug
