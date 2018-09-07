@@ -190,7 +190,7 @@ namespace Aqua.AccessControl.Predicates
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (!ReferenceEquals(null, node.Object))
+                if (!(node.Object is null))
                 {
                     using (_scope.PushSubstitute(node.Object, node))
                     {
