@@ -3,7 +3,7 @@
 namespace Aqua.AccessControl.Tests
 {
     using Aqua.AccessControl.Predicates;
-    using DataModel;
+    using Aqua.AccessControl.Tests.DataModel;
     using Shouldly;
     using System;
     using System.Linq;

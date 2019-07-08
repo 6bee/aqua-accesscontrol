@@ -17,9 +17,9 @@ namespace Aqua.AccessControl.Predicates
             => new PropertyPredicate<T, TPropertxy>(propertySelector, predicate);
 
         /// <summary>
-        /// Custom logic for projection of property value
+        /// Custom logic for projection of property value.
         /// </summary>
-        /// <remarks><see cref="IPropertyProjection"/> may not be combined with <see cref="IPropertyPredicate"/> within the same query</remarks>
+        /// <remarks><see cref="IPropertyProjection"/> may not be combined with <see cref="IPropertyPredicate"/> within the same query.</remarks>
         public static IPropertyProjection CreatePropertyProjection<T, TProperty>(Expression<Func<T, TProperty>> propertySelector, Expression<Func<T, TProperty>> projector)
             => new PropertyProjection<T, TProperty>(propertySelector, projector);
     }
