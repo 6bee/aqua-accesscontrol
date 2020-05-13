@@ -7,6 +7,7 @@ namespace Aqua.AccessControl
 
     internal static class Assert
     {
+#nullable disable
         public static T ArgumentNotNull<T>(T value, string argumentName, string message = null)
         {
             if (ReferenceEquals(null, value))
@@ -23,6 +24,7 @@ namespace Aqua.AccessControl
 
             return value;
         }
+#nullable restore
 
         internal static MemberInfo PropertyInfoArgument(MemberInfo memberInfo, string parameterName)
         {

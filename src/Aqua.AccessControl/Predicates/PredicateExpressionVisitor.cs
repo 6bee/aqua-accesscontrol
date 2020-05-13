@@ -56,7 +56,7 @@ namespace Aqua.AccessControl.Predicates
         {
             private sealed class Scope : IDisposable
             {
-                private readonly Scope _parent;
+                private readonly Scope? _parent;
                 private readonly Visitor _visitor;
                 private readonly Dictionary<Expression, Expression> _substitutes;
                 private readonly Dictionary<Expression, bool> _isSubstituted;
@@ -68,19 +68,19 @@ namespace Aqua.AccessControl.Predicates
                 {
                 }
 
-                private Scope(Scope parent, Visitor visitor)
+                private Scope(Scope? parent, Visitor visitor)
                 {
                     _substitutes = new Dictionary<Expression, Expression>(ReferenceEqualityComparer<Expression>.Instance);
                     _isSubstituted = new Dictionary<Expression, bool>(ReferenceEqualityComparer<Expression>.Instance);
                     _parent = parent;
-                    _visitor = visitor;
+                    _visitor = Assert.ArgumentNotNull(visitor, nameof(visitor));
                     _visitor._scope = this;
                 }
 
                 public bool IsSelectScope => _isSelect || (_parent?.IsSelectScope ?? false);
 
                 public void Dispose()
-                    => _visitor._scope = _parent;
+                    => _visitor._scope = _parent!;
 
                 public Scope Push()
                     => new Scope(this, _visitor);
@@ -123,6 +123,11 @@ namespace Aqua.AccessControl.Predicates
                     }
                     else
                     {
+                        if (_parent is null)
+                        {
+                            throw new Exception("Expected parent scope to exists.");
+                        }
+
                         _parent.PutFilterBeforeSelect(filterExpression);
                     }
                 }
@@ -137,7 +142,13 @@ namespace Aqua.AccessControl.Predicates
                             throw new Exception("unable to retrieve parameter");
                         }
 
-                        var parameter = (quoteExpression.Operand as LambdaExpression).Parameters.Single();
+                        var lambdaExpression = quoteExpression.Operand as LambdaExpression;
+                        if (lambdaExpression is null)
+                        {
+                            throw new Exception($"Expected predicate of type {nameof(LambdaExpression)}.");
+                        }
+
+                        var parameter = lambdaExpression.Parameters.Single();
 
                         var select = node;
                         var queryable = select.Arguments.First();
