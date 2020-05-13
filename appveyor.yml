@@ -9,9 +9,14 @@ init:
 
 version: 1.0.{build}
 
+environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
 before_build:
   - dotnet --info
   - dotnet restore
+  - dotnet tool install --global codecov.tool
 
 build_script:
   - dotnet build src\Aqua.AccessControl
@@ -21,9 +26,14 @@ build_script:
   - dotnet build test\Aqua.AccessControl.Tests.SqlServer.EFCore
 
 test_script:
-  - dotnet test test\Aqua.AccessControl.Tests\Aqua.AccessControl.Tests.csproj
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6\Aqua.AccessControl.Tests.SQLite.EF6.csproj
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore\Aqua.AccessControl.Tests.SQLite.EFCore.csproj
+  - dotnet test test\Aqua.AccessControl.Tests
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore
+
+after_test:
+  - dotnet test test\Aqua.AccessControl.Tests               -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
+  - codecov -f **\coverage.cobertura.xml
 
 build:
   verbosity: normal
