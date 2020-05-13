@@ -22,7 +22,7 @@ namespace Aqua.AccessControl.Tests
 
             var queryable = repo.Products;
             var ex = Assert.Throws<ArgumentException>(() => queryable.Apply(projection1, projection1));
-            ex.Message.Clean().ShouldBe($"Multiple predicates and/or projections defined for property: {typeof(Product).FullName}.{nameof(Product.Id)}\nParameter name: predicates");
+            ex.CleanMessage().ShouldBe($"Multiple predicates and/or projections defined for property: {typeof(Product).FullName}.{nameof(Product.Id)} (Parameter 'predicates')");
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Aqua.AccessControl.Tests
             var repo = DataProvider;
             var queryable = repo.Products;
             var ex = Assert.Throws<ArgumentException>(() => queryable.Apply(projection, predicate));
-            ex.Message.Clean().ShouldBe($"Multiple predicates and/or projections defined for property: {typeof(AggregateRoot).FullName}.{nameof(AggregateRoot.Id)}\nParameter name: predicates");
+            ex.CleanMessage().ShouldBe($"Multiple predicates and/or projections defined for property: {typeof(AggregateRoot).FullName}.{nameof(AggregateRoot.Id)} (Parameter 'predicates')");
         }
 
         [Fact]

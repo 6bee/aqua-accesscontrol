@@ -2,9 +2,20 @@
 
 namespace Aqua.AccessControl.Tests
 {
+    using System;
+    using System.Text.RegularExpressions;
+
     public static class Helper
     {
-        public static string Clean(this string text)
-            => text?.Replace("\r\n", "\n");
+        public static string CleanMessage(this Exception exception)
+        {
+            var message = exception?.Message.Replace("\r\n", "\n");
+            if (!string.IsNullOrEmpty(message))
+            {
+                message = Regex.Replace(message, @"^(.*)\nParameter name: ([^\n]*)$", @"$1 (Parameter '$2')", RegexOptions.Multiline);
+            }
+
+            return message;
+        }
     }
 }
