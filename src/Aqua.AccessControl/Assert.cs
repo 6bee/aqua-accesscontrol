@@ -11,7 +11,7 @@ namespace Aqua.AccessControl
         {
             if (ReferenceEquals(null, value))
             {
-                if (message == null)
+                if (message is null)
                 {
                     throw new ArgumentNullException(argumentName);
                 }
@@ -27,7 +27,7 @@ namespace Aqua.AccessControl
         internal static MemberInfo PropertyInfoArgument(MemberInfo memberInfo, string parameterName)
         {
             var propertyInfo = memberInfo as PropertyInfo;
-            if (propertyInfo == null)
+            if (propertyInfo is null)
             {
                 throw new ArgumentException($"Expected {parameterName} to be property selector");
             }

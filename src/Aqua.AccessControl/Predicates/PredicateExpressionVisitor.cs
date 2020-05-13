@@ -190,7 +190,7 @@ namespace Aqua.AccessControl.Predicates
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (!(node.Object is null))
+                if (!ReferenceEquals(node.Object, null))
                 {
                     using (_scope.PushSubstitute(node.Object, node))
                     {
@@ -219,7 +219,7 @@ namespace Aqua.AccessControl.Predicates
                     var isSingleElement = false;
                     var runtimeType = constantExpression.Value?.GetType();
                     var type = TypeHelper.GetElementType(runtimeType) ?? TypeHelper.GetElementType(constantExpression.Type);
-                    if (type == null)
+                    if (type is null)
                     {
                         type = runtimeType ?? constantExpression.Type;
                         isSingleElement = true;
@@ -237,7 +237,7 @@ namespace Aqua.AccessControl.Predicates
 
                 var isSingleElement = false;
                 var type = TypeHelper.GetElementType(expression.Type);
-                if (type == null)
+                if (type is null)
                 {
                     type = expression.Type;
                     isSingleElement = true;

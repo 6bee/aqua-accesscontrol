@@ -10,10 +10,9 @@ namespace Aqua.AccessControl
     internal static class TypeHelper
     {
         public static bool IsEnumerableType(Type type)
-        {
-            return typeof(string) != type
-                && typeof(IEnumerable).IsAssignableFrom(type);
-        }
+            => !ReferenceEquals(type, null)
+            && type != typeof(string)
+            && typeof(IEnumerable).IsAssignableFrom(type);
 
         public static Type GetElementType(Type type)
         {
@@ -23,7 +22,7 @@ namespace Aqua.AccessControl
 
         private static Type FindIEnumerable(Type type)
         {
-            if (type == null || type == typeof(string))
+            if (type is null || type == typeof(string))
             {
                 return null;
             }
@@ -46,7 +45,7 @@ namespace Aqua.AccessControl
             }
 
             var interfaces = type.GetInterfaces();
-            if (interfaces != null && interfaces.Any())
+            if (interfaces != null)
             {
                 foreach (var interfaceType in interfaces)
                 {
@@ -59,12 +58,12 @@ namespace Aqua.AccessControl
             }
 
             var baseType = type.BaseType;
-            if (baseType != null && baseType != typeof(object))
+            if (baseType is null || baseType == typeof(object))
             {
-                return FindIEnumerable(baseType);
+                return null;
             }
 
-            return null;
+            return FindIEnumerable(baseType);
         }
     }
 }

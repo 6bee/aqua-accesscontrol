@@ -5,8 +5,10 @@ namespace Aqua.AccessControl.Predicates
     using System;
     using System.Linq.Expressions;
 
-    internal class TypePredicate<T> : ITypePredicate
+    internal sealed class TypePredicate<T> : ITypePredicate
     {
+        private static readonly bool _isSingleElement = TypeHelper.GetElementType(typeof(T)) is null;
+
         public TypePredicate(Expression<Func<T, bool>> predicate)
             => Predicate = Assert.ArgumentNotNull(predicate, nameof(predicate));
 
@@ -15,6 +17,10 @@ namespace Aqua.AccessControl.Predicates
         public Type Type => typeof(T);
 
         public Expression ApplyTo(Expression expression)
-            => TypePredicateHelper.Apply(this, expression, Type, isSingleElement: TypeHelper.GetElementType(Type) == null);
+            => TypePredicateHelper.Apply(
+                this,
+                Assert.ArgumentNotNull(expression, nameof(expression)),
+                Type,
+                _isSingleElement);
     }
 }

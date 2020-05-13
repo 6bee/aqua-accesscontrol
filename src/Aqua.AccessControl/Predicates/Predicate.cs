@@ -13,8 +13,8 @@ namespace Aqua.AccessControl.Predicates
         public static ITypePredicate Create<T>(Expression<Func<T, bool>> predicate)
             => new TypePredicate<T>(predicate);
 
-        public static IPropertyPredicate Create<T, TPropertxy>(Expression<Func<T, TPropertxy>> propertySelector, Expression<Func<T, bool>> predicate)
-            => new PropertyPredicate<T, TPropertxy>(propertySelector, predicate);
+        public static IPropertyPredicate Create<T, TProperty>(Expression<Func<T, TProperty>> propertySelector, Expression<Func<T, bool>> predicate)
+            => new PropertyPredicate<T, TProperty>(propertySelector, predicate);
 
         /// <summary>
         /// Custom logic for projection of property value.

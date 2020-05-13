@@ -5,7 +5,7 @@ namespace Aqua.AccessControl.Predicates
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
-    internal class ReplaceParameterExpressionVisitor : ExpressionVisitor
+    internal sealed class ReplaceParameterExpressionVisitor : ExpressionVisitor
     {
         private readonly IDictionary<ParameterExpression, Expression> _parameterMap;
 

@@ -15,12 +15,12 @@ namespace Aqua.AccessControl.Predicates
             if (isSingleElement)
             {
                 var memberAccess = expression as MemberExpression;
-                if (memberAccess == null)
+                if (memberAccess is null)
                 {
                     throw new NotSupportedException($"{expression.NodeType} expression for single element is not supported");
                 }
 
-                var propertyProjection = PredicateToProjection(memberAccess.Expression, memberAccess.Member, memberAccess.Expression.Type, memberAccess.Type, typePredicate.Predicate);
+                var propertyProjection = PredicateToProjection(memberAccess.Expression, memberAccess.Member, memberAccess.Type, typePredicate.Predicate);
                 return propertyProjection;
             }
             else
@@ -56,7 +56,7 @@ namespace Aqua.AccessControl.Predicates
                 ? MethodInfos.Queryable.Cast(type)
                 : MethodInfos.Enumerable.Cast(type);
 
-        private static Expression PredicateToProjection(Expression expression, MemberInfo property, Type entityType, Type propertyType, LambdaExpression predicate)
+        private static Expression PredicateToProjection(Expression expression, MemberInfo property, Type propertyType, LambdaExpression predicate)
         {
             // (T t) => predicate(t.p) ? t.p : default(P)
             var memberAccess = Expression.PropertyOrField(expression, property.Name);

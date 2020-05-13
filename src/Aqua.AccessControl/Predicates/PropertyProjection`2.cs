@@ -6,14 +6,14 @@ namespace Aqua.AccessControl.Predicates
     using System.Linq.Expressions;
     using System.Reflection;
 
-    internal class PropertyProjection<T, TProperty> : IPropertyProjection
+    internal sealed class PropertyProjection<T, TProperty> : IPropertyProjection
     {
         public PropertyProjection(Expression<Func<T, TProperty>> propertySelector, Expression<Func<T, TProperty>> projection)
         {
             Assert.ArgumentNotNull(propertySelector, nameof(propertySelector));
 
             var memberExpression = propertySelector.Body as MemberExpression;
-            if (memberExpression == null)
+            if (memberExpression is null)
             {
                 throw new ArgumentException($"Argument {nameof(propertySelector)} expected to be member expression (x => x.Y)");
             }
@@ -31,6 +31,9 @@ namespace Aqua.AccessControl.Predicates
         public LambdaExpression Projection { get; }
 
         public Expression ApplyTo(Expression expression)
-            => PropertyProjectionHelper.Apply(new[] { this }, expression, typeof(T));
+            => PropertyProjectionHelper.Apply(
+                new[] { this },
+                Assert.ArgumentNotNull(expression, nameof(expression)),
+                typeof(T));
     }
 }

@@ -7,14 +7,14 @@ namespace Aqua.AccessControl.Predicates
     using System.Linq.Expressions;
     using System.Reflection;
 
-    internal class PropertyPredicate<T, TProperty> : IPropertyPredicate
+    internal sealed class PropertyPredicate<T, TProperty> : IPropertyPredicate
     {
         public PropertyPredicate(Expression<Func<T, TProperty>> propertySelector, Expression<Func<T, bool>> predicate)
         {
             Assert.ArgumentNotNull(propertySelector, nameof(propertySelector));
 
             var memberExpression = propertySelector.Body as MemberExpression;
-            if (memberExpression == null)
+            if (memberExpression is null)
             {
                 throw new ArgumentException($"Argument {nameof(propertySelector)} expected to be member expression (x => x.Y)");
             }
@@ -33,6 +33,7 @@ namespace Aqua.AccessControl.Predicates
 
         public Expression ApplyTo(Expression expression)
         {
+            Assert.ArgumentNotNull(expression, nameof(expression));
             var propertyProjection = PropertyProjectionHelper.ToProjections(new[] { this }).Single();
             return propertyProjection.ApplyTo(expression);
         }

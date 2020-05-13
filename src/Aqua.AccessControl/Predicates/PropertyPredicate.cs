@@ -7,7 +7,7 @@ namespace Aqua.AccessControl.Predicates
     using System.Linq.Expressions;
     using System.Reflection;
 
-    internal class PropertyPredicate : IPropertyPredicate
+    internal sealed class PropertyPredicate : IPropertyPredicate
     {
         public PropertyPredicate(MemberInfo property, Type type, Type propertyType, LambdaExpression predicate)
         {
@@ -29,6 +29,7 @@ namespace Aqua.AccessControl.Predicates
 
         public Expression ApplyTo(Expression expression)
         {
+            Assert.ArgumentNotNull(expression, nameof(expression));
             var propertyProjection = PropertyProjectionHelper.ToProjections(new[] { this }).Single();
             return propertyProjection.ApplyTo(expression);
         }

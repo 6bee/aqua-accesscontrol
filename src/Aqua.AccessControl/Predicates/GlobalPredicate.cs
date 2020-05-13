@@ -6,7 +6,7 @@ namespace Aqua.AccessControl.Predicates
     using System.Linq;
     using System.Linq.Expressions;
 
-    internal class GlobalPredicate : IPredicate
+    internal sealed class GlobalPredicate : IPredicate
     {
         public GlobalPredicate(Expression<Func<bool>> predicate)
             => Predicate = Assert.ArgumentNotNull(predicate, nameof(predicate));
@@ -15,6 +15,7 @@ namespace Aqua.AccessControl.Predicates
 
         public Expression ApplyTo(Expression expression)
         {
+            Assert.ArgumentNotNull(expression, nameof(expression));
             var elementType = expression.Type.GenericTypeArguments.Single();
             var predicate = Expression.Lambda(Predicate.Body, Expression.Parameter(elementType));
             return Expression.Call(MethodInfos.Queryable.Where(elementType), expression, predicate);
