@@ -79,11 +79,9 @@ namespace Aqua.AccessControl.Predicates
 
                 public bool IsSelectScope => _isSelect || (_parent?.IsSelectScope ?? false);
 
-                public void Dispose()
-                    => _visitor._scope = _parent!;
+                public void Dispose() => _visitor._scope = _parent!;
 
-                public Scope Push()
-                    => new Scope(this, _visitor);
+                public Scope Push() => new Scope(this, _visitor);
 
                 public IDisposable PushSubstitute(Expression expression, MethodCallExpression node)
                 {
@@ -97,7 +95,7 @@ namespace Aqua.AccessControl.Predicates
                     var scope = Push();
                     scope._isSelect =
                         node.Method.DeclaringType == typeof(Queryable) &&
-                        string.Equals(node.Method.Name, nameof(Queryable.Select));
+                        string.Equals(node.Method.Name, nameof(Queryable.Select), StringComparison.Ordinal);
                     return scope;
                 }
 
@@ -139,7 +137,7 @@ namespace Aqua.AccessControl.Predicates
                         var quoteExpression = node.Arguments.Last() as UnaryExpression;
                         if (quoteExpression?.NodeType != ExpressionType.Quote)
                         {
-                            throw new Exception("unable to retrieve parameter");
+                            throw new Exception("Unable to retrieve parameter");
                         }
 
                         var lambdaExpression = quoteExpression.Operand as LambdaExpression;

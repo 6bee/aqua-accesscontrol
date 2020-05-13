@@ -60,7 +60,7 @@ namespace Aqua.AccessControl.Predicates
         {
             // (T t) => predicate(t.p) ? t.p : default(P)
             var memberAccess = Expression.PropertyOrField(expression, property.Name);
-            var parameterMap = new Dictionary<ParameterExpression, Expression>() { { predicate.Parameters.Single(), memberAccess } };
+            var parameterMap = new Dictionary<ParameterExpression, Expression> { { predicate.Parameters.Single(), memberAccess } };
             var parameterReplacer = new ReplaceParameterExpressionVisitor(parameterMap);
             var test = parameterReplacer.Visit(predicate.Body);
             var ifTrue = memberAccess;
@@ -72,7 +72,7 @@ namespace Aqua.AccessControl.Predicates
         internal static Expression GetPredicate(ITypePredicate typePredicate, Expression expression)
         {
             var predicate = typePredicate.Predicate;
-            var parameterMap = new Dictionary<ParameterExpression, Expression>() { { predicate.Parameters.Single(), expression } };
+            var parameterMap = new Dictionary<ParameterExpression, Expression> { { predicate.Parameters.Single(), expression } };
             var parameterReplacer = new ReplaceParameterExpressionVisitor(parameterMap);
             var test = parameterReplacer.Visit(predicate.Body);
             return test;

@@ -4,35 +4,35 @@ namespace Aqua.AccessControl.Tests.DataModel
 {
     public static class ClaimTypes
     {
-        private const string Base = "https://github.com/6bee/aqua-accesscontrol/2018-01";
+        private static readonly string Base = "https://github.com/6bee/aqua-accesscontrol/2018-01";
 
-        public const string Tenant = Base + "/tenant";
+        public static readonly string Tenant = Base + "/tenant";
 
         public static class EntityAccess
         {
-            private const string Base = ClaimTypes.Base + "/entityaccess";
+            private static readonly string Base = ClaimTypes.Base + "/entityaccess";
 
-            public const string Create = Base + "/create";
-            public const string Read = Base + "/read";
-            public const string Update = Base + "/update";
-            public const string Delete = Base + "/delete";
+            public static readonly string Create = Base + "/create";
+            public static readonly string Read = Base + "/read";
+            public static readonly string Update = Base + "/update";
+            public static readonly string Delete = Base + "/delete";
         }
 
         public static class PropertyAccess
         {
-            private const string Base = ClaimTypes.Base + "/propertyaccess";
+            private static readonly string Base = ClaimTypes.Base + "/propertyaccess";
 
-            public const string Read = Base + "/read";
-            public const string Write = Base + "/write";
+            public static readonly string Read = Base + "/read";
+            public static readonly string Write = Base + "/write";
         }
 
         public static class Operation
         {
-            private const string Base = ClaimTypes.Base + "/operation";
+            private static readonly string Base = ClaimTypes.Base + "/operation";
 
-            public const string Read = Base + "/read";
-            public const string Write = Base + "/write";
-            public const string Exeute = Base + "/execute";
+            public static readonly string Read = Base + "/read";
+            public static readonly string Write = Base + "/write";
+            public static readonly string Exeute = Base + "/execute";
         }
     }
 }

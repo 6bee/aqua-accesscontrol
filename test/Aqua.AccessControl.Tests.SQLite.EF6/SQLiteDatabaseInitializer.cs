@@ -4,6 +4,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EF6
 {
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Linq;
 
     public class SQLiteDatabaseInitializer : IDatabaseInitializer<SQLiteDataProvider>
     {
@@ -72,20 +73,18 @@ CREATE TABLE IF NOT EXISTS [OrderItems](
 
         private void InitializeDataRecords(SQLiteDataProvider context)
         {
-            using (var source = new InMemoryDataProvider())
+            void Add<T>(IQueryable<T> source) where T : class
             {
-                context.Tenants.AddRange(source.Tenants);
-                context.SaveChanges();
-                context.Claims.AddRange(source.Claims);
-                context.SaveChanges();
-                context.ProductCategories.AddRange(source.ProductCategories);
-                context.SaveChanges();
-                context.Products.AddRange(source.Products);
-                context.SaveChanges();
-                context.Orders.AddRange(source.Orders);
-
+                context.Set<T>().AddRange(source);
                 context.SaveChanges();
             }
+
+            using var source = new InMemoryDataProvider();
+            Add(source.Tenants);
+            Add(source.Claims);
+            Add(source.ProductCategories);
+            Add(source.Products);
+            Add(source.Orders);
         }
 
         private static void InitializeDatabaseObjects(SQLiteDataProvider context)

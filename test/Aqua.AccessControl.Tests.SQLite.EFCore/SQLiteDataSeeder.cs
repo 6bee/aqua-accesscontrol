@@ -2,24 +2,25 @@
 
 namespace Aqua.AccessControl.Tests.SQLite.EFCore
 {
+    using System.Linq;
+
     public class SQLiteDataSeeder
     {
         public void Seed(SQLiteDataContext context)
         {
-            using (var source = new InMemoryDataProvider())
+            void Add<T>(IQueryable<T> source) where T : class
             {
-                context.Tenants.AddRange(source.Tenants);
-                context.SaveChanges();
-                context.Claims.AddRange(source.Claims);
-                context.SaveChanges();
-                context.ProductCategories.AddRange(source.ProductCategories);
-                context.SaveChanges();
-                context.Products.AddRange(source.Products);
-                context.SaveChanges();
-                context.Orders.AddRange(source.Orders);
-
+                context.Set<T>().AddRange(source);
                 context.SaveChanges();
             }
+
+            using var source = new InMemoryDataProvider();
+
+            Add(source.Tenants);
+            Add(source.Claims);
+            Add(source.ProductCategories);
+            Add(source.Products);
+            Add(source.Orders);
         }
     }
 }

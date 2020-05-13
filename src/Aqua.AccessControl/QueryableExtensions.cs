@@ -16,7 +16,7 @@ namespace Aqua.AccessControl
         public static IQueryable<T> Apply<T>(this IQueryable<T> queryable, IEnumerable<IPredicate> predicates)
         {
             Assert.ArgumentNotNull(queryable, nameof(queryable));
-            ////Assert.ArgumentNotNull(predicates, nameof(predicates));
+            Assert.ArgumentNotNull(predicates, nameof(predicates));
 
             var expression = queryable.Expression.Apply(predicates);
             return ReferenceEquals(expression, queryable.Expression)
