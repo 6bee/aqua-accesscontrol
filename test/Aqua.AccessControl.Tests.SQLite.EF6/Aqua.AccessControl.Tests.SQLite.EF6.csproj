@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for aqua-accesscontrol using SQLite via EF6</Description>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

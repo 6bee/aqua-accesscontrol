@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for aqua-accesscontrol</Description>
-    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
