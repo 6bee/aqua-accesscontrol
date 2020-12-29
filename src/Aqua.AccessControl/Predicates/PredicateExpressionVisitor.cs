@@ -150,8 +150,8 @@ namespace Aqua.AccessControl.Predicates
 
                         var select = node;
                         var queryable = select.Arguments.First();
-                        var elementType = TypeHelper.GetElementType(queryable.Type);
-                        var where = MethodInfos.Queryable.Where(elementType);
+                        var elementType = TypeHelper.GetElementType(queryable.Type) ?? queryable.Type;
+                        var where = MethodInfos.Queryable.Where(elementType); // TODO: whould where take 'elementType' or 'queryable.Type'?
                         foreach (var filter in _filterExpressions)
                         {
                             var predicate = Expression.Lambda(filter, parameter);

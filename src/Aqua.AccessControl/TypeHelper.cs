@@ -5,7 +5,6 @@ namespace Aqua.AccessControl
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     internal static class TypeHelper
@@ -15,14 +14,12 @@ namespace Aqua.AccessControl
             && type != typeof(string)
             && typeof(IEnumerable).IsAssignableFrom(type);
 
-        [return: NotNullIfNotNull("type")]
         public static Type? GetElementType(Type? type)
         {
             var enumerableType = FindIEnumerable(type);
             return enumerableType?.GetGenericArguments().First();
         }
 
-        [return: NotNullIfNotNull("type")]
         private static Type? FindIEnumerable(Type? type)
         {
             if (type is null || type == typeof(string))
