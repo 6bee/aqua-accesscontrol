@@ -31,8 +31,8 @@ test_script:
   - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore
 
 after_test:
-  - dotnet test test\Aqua.AccessControl.Tests               -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
+  - dotnet test test\Aqua.AccessControl.Tests               -f net5.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore -f net5.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
   - codecov -f **\coverage.cobertura.xml
 
 build:
