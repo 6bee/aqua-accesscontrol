@@ -197,6 +197,23 @@ namespace Aqua.AccessControl.Predicates
                 return expression;
             }
 
+            protected override Expression VisitExtension(Expression node)
+            {
+                var expression = base.VisitExtension(node);
+
+                var isSingleElement = false;
+                var type = TypeHelper.GetElementType(expression.Type);
+                if (type is null)
+                {
+                    type = expression.Type;
+                    isSingleElement = true;
+                }
+
+                expression = ApplyTypeFilters(expression, type, isSingleElement);
+
+                return expression;
+            }
+
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
                 if (!ReferenceEquals(node.Object, null))
