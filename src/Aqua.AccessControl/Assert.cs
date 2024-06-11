@@ -10,6 +10,8 @@ internal static class Assert
 {
     internal static MemberInfo PropertyInfoArgument(MemberInfo memberInfo, [CallerArgumentExpression("memberInfo")] string? parameterName = null)
     {
+        memberInfo.AssertNotNull(parameterName);
+
         var propertyInfo = memberInfo as PropertyInfo;
         if (propertyInfo is null)
         {

@@ -11,7 +11,7 @@ internal sealed class PropertyProjection : IPropertyProjection
     internal PropertyProjection(MemberInfo property, Type type, Type propertyType, LambdaExpression projection)
     {
         Type = type.CheckNotNull();
-        Property = Assert.PropertyInfoArgument(property.CheckNotNull());
+        Property = Assert.PropertyInfoArgument(property);
         PropertyType = propertyType.CheckNotNull();
         Projection = projection.CheckNotNull();
     }
