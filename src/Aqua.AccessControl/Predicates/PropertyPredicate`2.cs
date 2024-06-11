@@ -34,7 +34,7 @@ internal sealed class PropertyPredicate<T, TProperty> : IPropertyPredicate
     public Expression ApplyTo(Expression expression)
     {
         expression.AssertNotNull();
-        var propertyProjection = PropertyProjectionHelper.ToProjections(new[] { this }).Single();
+        var propertyProjection = PropertyProjectionHelper.ToProjections([this]).Single();
         return propertyProjection.ApplyTo(expression);
     }
 }

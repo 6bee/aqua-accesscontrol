@@ -28,7 +28,7 @@ internal sealed class PropertyPredicate : IPropertyPredicate
     public Expression ApplyTo(Expression expression)
     {
         expression.CheckNotNull();
-        var propertyProjection = PropertyProjectionHelper.ToProjections(new[] { this }).Single();
+        var propertyProjection = PropertyProjectionHelper.ToProjections([this]).Single();
         return propertyProjection.ApplyTo(expression);
     }
 }

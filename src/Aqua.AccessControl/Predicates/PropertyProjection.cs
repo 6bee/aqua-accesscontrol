@@ -26,7 +26,7 @@ internal sealed class PropertyProjection : IPropertyProjection
 
     public Expression ApplyTo(Expression expression)
         => PropertyProjectionHelper.Apply(
-            new[] { this },
+            [this],
             expression.CheckNotNull(),
             Property.DeclaringType);
 }

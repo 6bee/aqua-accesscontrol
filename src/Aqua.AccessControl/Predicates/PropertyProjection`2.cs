@@ -32,7 +32,7 @@ internal sealed class PropertyProjection<T, TProperty> : IPropertyProjection
 
     public Expression ApplyTo(Expression expression)
         => PropertyProjectionHelper.Apply(
-            new[] { this },
+            [this],
             expression.CheckNotNull(),
             typeof(T));
 }
