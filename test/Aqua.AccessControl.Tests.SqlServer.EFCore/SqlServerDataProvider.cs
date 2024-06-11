@@ -18,7 +18,7 @@ namespace Aqua.AccessControl.Tests.SqlServer.EFCore
         public SqlServerDataProvider(string username, string passeword)
         {
             var connectionString =
-                  $"Server=.;Database=testdb-{Guid.NewGuid()};User Id={username ?? "sa"};Password = {passeword ?? "sa(!)Password"};";
+                  $"Server=.;Database=testdb-{Guid.NewGuid()};User Id={username ?? "sa"};Password = {passeword ?? "sa(!)Password"};TrustServerCertificate=True";
             _dataContext = new SqlServerDataContext(connectionString);
             var created = _dataContext.Database.EnsureCreated();
             if (created)
