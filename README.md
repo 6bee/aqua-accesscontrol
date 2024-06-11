@@ -6,15 +6,59 @@
 | ---    | ---                                                 | ---                     | ---                            |
 | `main` | [![NuGet Badge][1]][2] [![MyGet Pre Release][3]][4] | [![Build status][5]][6] | [![Travis build Status][7]][8] |
 
-### Description
+## Description
 
+Query filters for linq expressions.
 
+## Samples
 
-### Features
+### Global Predicate
 
-## Sample
+Predicates can be based on progam logic or on expanded data query.
 
 ```C#
+// base query
+var query =
+    from p in repo.Products
+    select p;
+// code based predicate
+var result1 = query
+    .Apply(Predicate.Create(() => true))
+    .ToList();
+// predicate based on data qeury
+var result2 = query
+    .Apply(Predicate.Create(() =>
+        repo.Claims.Any(c =>
+            c.Type == ClaimTypes.Tenant &&
+            c.Value == "1" &&
+            c.Subject == username)))
+    .ToList();
+```
+
+### Type Predicate
+
+The following predicate filters out records which have not tenant ID 1.
+
+```C#
+var query =
+    from o in repo.Orders
+    select new { o.Id };
+var result = query
+    .Apply(Predicate.Create<Order>(o => o.TenantId == 1))
+    .ToList();
+```
+
+### Property Predicate
+
+The following predicate retrieves product prices only for records which have tenant ID 1, other records have the `Price` property not set.
+
+```C#
+var query =
+    from p in repo.Products
+    select new { p.Id, p.Price };
+var result = query
+    .Apply(Predicate.Create<Product, decimal>(p => p.Price, p => p.TenantId == 1))
+    .ToList();
 ```
 
 [1]: https://buildstats.info/nuget/aqua-accesscontrol?includePreReleases=true
