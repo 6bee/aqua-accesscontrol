@@ -10,16 +10,16 @@ internal sealed class PropertyProjection<T, TProperty> : IPropertyProjection
 {
     public PropertyProjection(Expression<Func<T, TProperty>> propertySelector, Expression<Func<T, TProperty>> projection)
     {
-        Assert.ArgumentNotNull(propertySelector, nameof(propertySelector));
+        propertySelector.AssertNotNull();
+        projection.AssertNotNull();
 
-        var memberExpression = propertySelector.Body as MemberExpression;
-        if (memberExpression is null)
+        if (propertySelector.Body is not MemberExpression memberExpression)
         {
             throw new ArgumentException($"Argument {nameof(propertySelector)} expected to be member expression (x => x.Y)");
         }
 
         Property = Assert.PropertyInfoArgument(memberExpression.Member, nameof(propertySelector));
-        Projection = Assert.ArgumentNotNull(projection, nameof(projection));
+        Projection = projection;
     }
 
     public Type Type => typeof(T);
@@ -33,6 +33,6 @@ internal sealed class PropertyProjection<T, TProperty> : IPropertyProjection
     public Expression ApplyTo(Expression expression)
         => PropertyProjectionHelper.Apply(
             new[] { this },
-            Assert.ArgumentNotNull(expression, nameof(expression)),
+            expression.CheckNotNull(),
             typeof(T));
 }

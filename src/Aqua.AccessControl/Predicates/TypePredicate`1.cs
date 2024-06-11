@@ -10,7 +10,7 @@ internal sealed class TypePredicate<T> : ITypePredicate
     private static readonly bool _isSingleElement = TypeHelper.GetElementType(typeof(T)) is null;
 
     public TypePredicate(Expression<Func<T, bool>> predicate)
-        => Predicate = Assert.ArgumentNotNull(predicate, nameof(predicate));
+        => Predicate = predicate.CheckNotNull();
 
     public LambdaExpression Predicate { get; }
 
@@ -19,7 +19,7 @@ internal sealed class TypePredicate<T> : ITypePredicate
     public Expression ApplyTo(Expression expression)
         => TypePredicateHelper.Apply(
             this,
-            Assert.ArgumentNotNull(expression, nameof(expression)),
+            expression.CheckNotNull(),
             Type,
             _isSingleElement);
 }

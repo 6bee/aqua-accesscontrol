@@ -15,8 +15,8 @@ public static class QueryableExtensions
 {
     public static IQueryable<T> Apply<T>(this IQueryable<T> queryable, IEnumerable<IPredicate> predicates)
     {
-        Assert.ArgumentNotNull(queryable, nameof(queryable));
-        Assert.ArgumentNotNull(predicates, nameof(predicates));
+        queryable.AssertNotNull();
+        predicates.AssertNotNull();
 
         var expression = queryable.Expression.Apply(predicates);
         return ReferenceEquals(expression, queryable.Expression)

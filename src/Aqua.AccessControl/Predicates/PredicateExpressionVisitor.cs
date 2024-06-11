@@ -15,7 +15,7 @@ internal sealed class PredicateExpressionVisitor
 
     public PredicateExpressionVisitor(IEnumerable<IPredicate> predicates)
     {
-        Assert.ArgumentNotNull(predicates, nameof(predicates));
+        predicates.AssertNotNull();
 
         _typePredicates = predicates
             .OfType<ITypePredicate>()
@@ -73,7 +73,7 @@ internal sealed class PredicateExpressionVisitor
                 _substitutes = new Dictionary<Expression, Expression>(ReferenceEqualityComparer<Expression>.Instance);
                 _isSubstituted = new Dictionary<Expression, bool>(ReferenceEqualityComparer<Expression>.Instance);
                 _parent = parent;
-                _visitor = Assert.ArgumentNotNull(visitor, nameof(visitor));
+                _visitor = visitor.CheckNotNull();
                 _visitor._scope = this;
             }
 

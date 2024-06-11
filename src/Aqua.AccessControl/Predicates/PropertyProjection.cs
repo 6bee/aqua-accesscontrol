@@ -10,12 +10,10 @@ internal sealed class PropertyProjection : IPropertyProjection
 {
     internal PropertyProjection(MemberInfo property, Type type, Type propertyType, LambdaExpression projection)
     {
-        Assert.ArgumentNotNull(property, nameof(property));
-
-        Type = Assert.ArgumentNotNull(type, nameof(type));
-        Property = Assert.PropertyInfoArgument(property, nameof(property));
-        PropertyType = Assert.ArgumentNotNull(propertyType, nameof(propertyType));
-        Projection = Assert.ArgumentNotNull(projection, nameof(projection));
+        Type = type.CheckNotNull();
+        Property = Assert.PropertyInfoArgument(property.CheckNotNull());
+        PropertyType = propertyType.CheckNotNull();
+        Projection = projection.CheckNotNull();
     }
 
     public Type Type { get; }
@@ -29,6 +27,6 @@ internal sealed class PropertyProjection : IPropertyProjection
     public Expression ApplyTo(Expression expression)
         => PropertyProjectionHelper.Apply(
             new[] { this },
-            Assert.ArgumentNotNull(expression, nameof(expression)),
+            expression.CheckNotNull(),
             Property.DeclaringType);
 }

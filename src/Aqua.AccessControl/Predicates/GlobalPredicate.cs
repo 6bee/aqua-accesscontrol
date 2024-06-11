@@ -9,13 +9,13 @@ using System.Linq.Expressions;
 internal sealed class GlobalPredicate : IPredicate
 {
     public GlobalPredicate(Expression<Func<bool>> predicate)
-        => Predicate = Assert.ArgumentNotNull(predicate, nameof(predicate));
+        => Predicate = predicate.CheckNotNull();
 
     public Expression<Func<bool>> Predicate { get; }
 
     public Expression ApplyTo(Expression expression)
     {
-        Assert.ArgumentNotNull(expression, nameof(expression));
+        expression.AssertNotNull();
         var elementType = expression.Type.GenericTypeArguments.Single();
         var predicate = Expression.Lambda(Predicate.Body, Expression.Parameter(elementType));
         return Expression.Call(MethodInfos.Queryable.Where(elementType), expression, predicate);

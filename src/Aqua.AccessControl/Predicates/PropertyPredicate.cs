@@ -11,12 +11,10 @@ internal sealed class PropertyPredicate : IPropertyPredicate
 {
     public PropertyPredicate(MemberInfo property, Type type, Type propertyType, LambdaExpression predicate)
     {
-        Assert.ArgumentNotNull(property, nameof(property));
-
-        Type = Assert.ArgumentNotNull(type, nameof(type));
-        Property = Assert.PropertyInfoArgument(property, nameof(property));
-        PropertyType = Assert.ArgumentNotNull(propertyType, nameof(propertyType));
-        Predicate = Assert.ArgumentNotNull(predicate, nameof(predicate));
+        Type = type.CheckNotNull();
+        Property = Assert.PropertyInfoArgument(property);
+        PropertyType = propertyType.CheckNotNull();
+        Predicate = predicate.CheckNotNull();
     }
 
     public Type Type { get; }
@@ -29,7 +27,7 @@ internal sealed class PropertyPredicate : IPropertyPredicate
 
     public Expression ApplyTo(Expression expression)
     {
-        Assert.ArgumentNotNull(expression, nameof(expression));
+        expression.CheckNotNull();
         var propertyProjection = PropertyProjectionHelper.ToProjections(new[] { this }).Single();
         return propertyProjection.ApplyTo(expression);
     }

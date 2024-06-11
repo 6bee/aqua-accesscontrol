@@ -4,29 +4,11 @@ namespace Aqua.AccessControl;
 
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 internal static class Assert
 {
-#nullable disable
-    public static T ArgumentNotNull<T>(T value, string argumentName, string message = null)
-    {
-        if (ReferenceEquals(null, value))
-        {
-            if (message is null)
-            {
-                throw new ArgumentNullException(argumentName);
-            }
-            else
-            {
-                throw new ArgumentNullException(argumentName, message);
-            }
-        }
-
-        return value;
-    }
-#nullable restore
-
-    internal static MemberInfo PropertyInfoArgument(MemberInfo memberInfo, string parameterName)
+    internal static MemberInfo PropertyInfoArgument(MemberInfo memberInfo, [CallerArgumentExpression("memberInfo")] string? parameterName = null)
     {
         var propertyInfo = memberInfo as PropertyInfo;
         if (propertyInfo is null)
