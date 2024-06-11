@@ -1,8 +1,10 @@
-image: Visual Studio 2019
+image: Visual Studio 2022
 
 branches:
   except:
-  - experimental
+  - /^experimental.*$/
+
+skip_tags: true
 
 init:
   - git config --global core.autocrlf true
@@ -15,25 +17,15 @@ environment:
 
 before_build:
   - dotnet --info
-  - dotnet restore
   - dotnet tool install --global codecov.tool
 
 build_script:
-  - dotnet build src\Aqua.AccessControl
-  - dotnet build test\Aqua.AccessControl.Tests
-  - dotnet build test\Aqua.AccessControl.Tests.SQLite.EF6
-  - dotnet build test\Aqua.AccessControl.Tests.SQLite.EFCore
-  - dotnet build test\Aqua.AccessControl.Tests.SqlServer.EFCore
+  - dotnet build Aqua.AccessControl.sln
 
 test_script:
-  - dotnet test test\Aqua.AccessControl.Tests
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore
+  - dotnet test test\Aqua.AccessControl.Tests --settings coverlet.runsettings
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6 --settings coverlet.runsettings
+  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore --settings coverlet.runsettings
 
 after_test:
-  - dotnet test test\Aqua.AccessControl.Tests               -f net5.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore -f net5.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
   - codecov -f **\coverage.cobertura.xml
-
-build:
-  verbosity: normal

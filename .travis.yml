@@ -1,8 +1,10 @@
-language: generic
+language: minimal
+
+if: tag IS blank
 
 branches:
   except:
-  - experimental
+  - /^experimental.*$/
 
 env:
   global:
@@ -22,19 +24,21 @@ addons:
 matrix:
   include:
     - os: linux
-      env: CLI_VERSION=Latest CONFIGURATION=Release
+      dist: jammy # define Ubuntu Linux Build Environment [Jammy 22.04] to fix issue with loading/executing sqlite
+      env: CONFIGURATION=Release
     - os: osx
-      env: CLI_VERSION=Latest CONFIGURATION=Release
+      osx_image: xcode14.2 # https://docs.travis-ci.com/user/reference/osx/#macos-version
+      env: CONFIGURATION=Release
 
 install:
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-  - curl -sSL "https://dot.net/v1/dotnet-install.sh" | bash /dev/stdin --channel 5.0 --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel LTS --version latest --install-dir "$DOTNET_INSTALL_DIR"
   - export PATH="$DOTNET_INSTALL_DIR:$PATH"
+  - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
 
 before_script:
-  - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
   - dotnet --info
 
 script:
-  - dotnet test test/Aqua.AccessControl.Tests               -c $CONFIGURATION -f net5.0
-  - dotnet test test/Aqua.AccessControl.Tests.SQLite.EFCore -c $CONFIGURATION -f net5.0
+  - dotnet test test/Aqua.AccessControl.Tests               -c $CONFIGURATION -f net8.0
+  - dotnet test test/Aqua.AccessControl.Tests.SQLite.EFCore -c $CONFIGURATION -f net8.0
