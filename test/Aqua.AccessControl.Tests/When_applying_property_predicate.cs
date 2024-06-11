@@ -37,7 +37,9 @@ public class When_applying_property_predicate : PredicateTest
     {
         var repo = DataProvider;
 
-        var query = repo.Products;
+        var query =
+            from p in repo.Products
+            select p;
 
         var result = query
             .Apply(
@@ -57,7 +59,9 @@ public class When_applying_property_predicate : PredicateTest
     {
         var repo = DataProvider;
 
-        var query = repo.Products;
+        var query =
+            from p in repo.Products
+            select p;
 
         var result = query
             .Apply(Predicate.Create<AggregateRoot, long>(x => x.Id, x => x.Id == 110))
@@ -75,7 +79,9 @@ public class When_applying_property_predicate : PredicateTest
     {
         var repo = DataProvider;
 
-        var query = repo.Products;
+        var query =
+            from p in repo.Products
+            select p;
 
         var result = query
             .Apply(Predicate.Create<Product, long>(x => x.Id, x => x.Id == 110))
@@ -93,7 +99,9 @@ public class When_applying_property_predicate : PredicateTest
     {
         var repo = DataProvider;
 
-        var query = repo.Products;
+        var query =
+            from p in repo.Products
+            select p;
 
         var result = query
             .Apply(Predicate.Create<ProductCategory, long>(x => x.Id, x => x.Id == 1))

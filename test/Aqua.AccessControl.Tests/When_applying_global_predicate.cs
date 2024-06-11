@@ -20,7 +20,11 @@ public class When_applying_global_predicate : PredicateTest
     [InlineData(false, 0)]
     public void Should_apply_global_predicate(bool predicate, int expectedNumberOfRecords)
     {
-        var query = DataProvider.Products;
+        var repo = DataProvider;
+
+        var query =
+            from p in repo.Products
+            select p;
 
         var result = query
             .Apply(Predicate.Create(() => predicate == true))
@@ -34,11 +38,15 @@ public class When_applying_global_predicate : PredicateTest
     [InlineData(NotGrantedUser, 0)]
     public void Should_apply_global_predicate_referencing_entity_not_part_of_basic_query(string username, int expectedNumberOfRecords)
     {
-        var query = DataProvider.Products;
+        var repo = DataProvider;
+
+        var query =
+            from p in repo.Products
+            select p;
 
         var result = query
             .Apply(Predicate.Create(() =>
-                DataProvider.Claims.Any(c =>
+                repo.Claims.Any(c =>
                     c.Type == ClaimTypes.Tenant &&
                     c.Value == "1" &&
                     c.Subject == username)))
