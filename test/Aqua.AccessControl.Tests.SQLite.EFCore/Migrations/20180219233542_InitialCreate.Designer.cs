@@ -7,123 +7,122 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 
-namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations
+namespace Aqua.AccessControl.Tests.SQLite.EFCore.Migrations;
+
+[DbContext(typeof(SQLiteDataProvider))]
+[Migration("20180219233542_InitialCreate")]
+partial class InitialCreate
 {
-    [DbContext(typeof(SQLiteDataProvider))]
-    [Migration("20180219233542_InitialCreate")]
-    partial class InitialCreate
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
+        modelBuilder
+            .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Claim", b =>
-                {
-                    b.Property<long>("Id");
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Claim", b =>
+            {
+                b.Property<long>("Id");
 
-                    b.Property<string>("Subject");
+                b.Property<string>("Subject");
 
-                    b.Property<int>("TenantId");
+                b.Property<int>("TenantId");
 
-                    b.Property<string>("Type");
+                b.Property<string>("Type");
 
-                    b.Property<string>("Value");
+                b.Property<string>("Value");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Claims");
-                });
+                b.ToTable("Claims");
+            });
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Order", b =>
-                {
-                    b.Property<long>("Id");
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Order", b =>
+            {
+                b.Property<long>("Id");
 
-                    b.Property<int>("TenantId");
+                b.Property<int>("TenantId");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Orders");
-                });
+                b.ToTable("Orders");
+            });
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.OrderItem", b =>
-                {
-                    b.Property<long>("Id");
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.OrderItem", b =>
+            {
+                b.Property<long>("Id");
 
-                    b.Property<long>("OrderId");
+                b.Property<long>("OrderId");
 
-                    b.Property<decimal>("Price");
+                b.Property<decimal>("Price");
 
-                    b.Property<long>("ProductId");
+                b.Property<long>("ProductId");
 
-                    b.Property<int>("Quantity");
+                b.Property<int>("Quantity");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItem");
-                });
+                b.ToTable("OrderItem");
+            });
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Product", b =>
-                {
-                    b.Property<long>("Id");
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Product", b =>
+            {
+                b.Property<long>("Id");
 
-                    b.Property<string>("Name");
+                b.Property<string>("Name");
 
-                    b.Property<decimal>("Price");
+                b.Property<decimal>("Price");
 
-                    b.Property<long?>("ProductCategoryId");
+                b.Property<long?>("ProductCategoryId");
 
-                    b.Property<int>("TenantId");
+                b.Property<int>("TenantId");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("ProductCategoryId");
+                b.HasIndex("ProductCategoryId");
 
-                    b.ToTable("Products");
-                });
+                b.ToTable("Products");
+            });
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.ProductCategory", b =>
-                {
-                    b.Property<long>("Id");
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.ProductCategory", b =>
+            {
+                b.Property<long>("Id");
 
-                    b.Property<string>("Name");
+                b.Property<string>("Name");
 
-                    b.Property<int>("TenantId");
+                b.Property<int>("TenantId");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("ProductCategories");
-                });
+                b.ToTable("ProductCategories");
+            });
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Tenant", b =>
-                {
-                    b.Property<long>("Id");
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Tenant", b =>
+            {
+                b.Property<long>("Id");
 
-                    b.Property<string>("Name");
+                b.Property<string>("Name");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Tenants");
-                });
+                b.ToTable("Tenants");
+            });
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.OrderItem", b =>
-                {
-                    b.HasOne("Aqua.AccessControl.Tests.DataModel.Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.OrderItem", b =>
+            {
+                b.HasOne("Aqua.AccessControl.Tests.DataModel.Order")
+                    .WithMany("Items")
+                    .HasForeignKey("OrderId")
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
-            modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Product", b =>
-                {
-                    b.HasOne("Aqua.AccessControl.Tests.DataModel.ProductCategory", "ProductCategory")
-                        .WithMany()
-                        .HasForeignKey("ProductCategoryId");
-                });
+        modelBuilder.Entity("Aqua.AccessControl.Tests.DataModel.Product", b =>
+            {
+                b.HasOne("Aqua.AccessControl.Tests.DataModel.ProductCategory", "ProductCategory")
+                    .WithMany()
+                    .HasForeignKey("ProductCategoryId");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

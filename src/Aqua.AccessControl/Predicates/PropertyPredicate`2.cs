@@ -1,41 +1,40 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Predicates
+namespace Aqua.AccessControl.Predicates;
+
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+
+internal sealed class PropertyPredicate<T, TProperty> : IPropertyPredicate
 {
-    using System;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-
-    internal sealed class PropertyPredicate<T, TProperty> : IPropertyPredicate
+    public PropertyPredicate(Expression<Func<T, TProperty>> propertySelector, Expression<Func<T, bool>> predicate)
     {
-        public PropertyPredicate(Expression<Func<T, TProperty>> propertySelector, Expression<Func<T, bool>> predicate)
+        Assert.ArgumentNotNull(propertySelector, nameof(propertySelector));
+
+        var memberExpression = propertySelector.Body as MemberExpression;
+        if (memberExpression is null)
         {
-            Assert.ArgumentNotNull(propertySelector, nameof(propertySelector));
-
-            var memberExpression = propertySelector.Body as MemberExpression;
-            if (memberExpression is null)
-            {
-                throw new ArgumentException($"Argument {nameof(propertySelector)} expected to be member expression (x => x.Y)");
-            }
-
-            Property = Assert.PropertyInfoArgument(memberExpression.Member, nameof(propertySelector));
-            Predicate = Assert.ArgumentNotNull(predicate, nameof(predicate));
+            throw new ArgumentException($"Argument {nameof(propertySelector)} expected to be member expression (x => x.Y)");
         }
 
-        public Type Type => typeof(T);
+        Property = Assert.PropertyInfoArgument(memberExpression.Member, nameof(propertySelector));
+        Predicate = Assert.ArgumentNotNull(predicate, nameof(predicate));
+    }
 
-        public MemberInfo Property { get; }
+    public Type Type => typeof(T);
 
-        public Type PropertyType => typeof(TProperty);
+    public MemberInfo Property { get; }
 
-        public LambdaExpression Predicate { get; }
+    public Type PropertyType => typeof(TProperty);
 
-        public Expression ApplyTo(Expression expression)
-        {
-            Assert.ArgumentNotNull(expression, nameof(expression));
-            var propertyProjection = PropertyProjectionHelper.ToProjections(new[] { this }).Single();
-            return propertyProjection.ApplyTo(expression);
-        }
+    public LambdaExpression Predicate { get; }
+
+    public Expression ApplyTo(Expression expression)
+    {
+        Assert.ArgumentNotNull(expression, nameof(expression));
+        var propertyProjection = PropertyProjectionHelper.ToProjections(new[] { this }).Single();
+        return propertyProjection.ApplyTo(expression);
     }
 }

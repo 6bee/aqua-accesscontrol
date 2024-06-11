@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Tests.SQLite.EF6
-{
-    using System.Data.Common;
-    using System.Data.Entity;
-    using System.Linq;
+namespace Aqua.AccessControl.Tests.SQLite.EF6;
 
-    public class SQLiteDatabaseInitializer : IDatabaseInitializer<SQLiteDataProvider>
-    {
-        private const string Ddl = @"
+using System.Data.Common;
+using System.Data.Entity;
+using System.Linq;
+
+public class SQLiteDatabaseInitializer : IDatabaseInitializer<SQLiteDataProvider>
+{
+    private const string Ddl = @"
 DROP TABLE IF EXISTS [OrderItems];
 DROP TABLE IF EXISTS [Orders];
 DROP TABLE IF EXISTS [Products];
@@ -65,42 +65,41 @@ CREATE TABLE IF NOT EXISTS [OrderItems](
 );
 ";
 
-        public void InitializeDatabase(SQLiteDataProvider context)
+    public void InitializeDatabase(SQLiteDataProvider context)
+    {
+        InitializeDatabaseObjects(context);
+        InitializeDataRecords(context);
+    }
+
+    private void InitializeDataRecords(SQLiteDataProvider context)
+    {
+        void Add<T>(IQueryable<T> source) where T : class
         {
-            InitializeDatabaseObjects(context);
-            InitializeDataRecords(context);
+            context.Set<T>().AddRange(source);
+            context.SaveChanges();
         }
 
-        private void InitializeDataRecords(SQLiteDataProvider context)
-        {
-            void Add<T>(IQueryable<T> source) where T : class
-            {
-                context.Set<T>().AddRange(source);
-                context.SaveChanges();
-            }
+        using var source = new InMemoryDataProvider();
+        Add(source.Tenants);
+        Add(source.Claims);
+        Add(source.ProductCategories);
+        Add(source.Products);
+        Add(source.Orders);
+    }
 
-            using var source = new InMemoryDataProvider();
-            Add(source.Tenants);
-            Add(source.Claims);
-            Add(source.ProductCategories);
-            Add(source.Products);
-            Add(source.Orders);
-        }
+    private static void InitializeDatabaseObjects(SQLiteDataProvider context)
+    {
+        var connection = context.Database.Connection;
+        connection.Open();
+        ExecuteNonQuery(connection, Ddl);
+        connection.Close();
+    }
 
-        private static void InitializeDatabaseObjects(SQLiteDataProvider context)
-        {
-            var connection = context.Database.Connection;
-            connection.Open();
-            ExecuteNonQuery(connection, Ddl);
-            connection.Close();
-        }
-
-        private static int ExecuteNonQuery(DbConnection connection, string commandText)
-        {
-            var command = connection.CreateCommand();
-            command.CommandText = commandText;
-            var result = command.ExecuteNonQuery();
-            return result;
-        }
+    private static int ExecuteNonQuery(DbConnection connection, string commandText)
+    {
+        var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        var result = command.ExecuteNonQuery();
+        return result;
     }
 }

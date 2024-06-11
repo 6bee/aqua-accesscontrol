@@ -1,32 +1,31 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Tests
+namespace Aqua.AccessControl.Tests;
+
+using System;
+
+public abstract class Disposable : IDisposable
 {
-    using System;
+    protected bool Disposed { get; private set; }
 
-    public abstract class Disposable : IDisposable
+    ~Disposable()
     {
-        protected bool Disposed { get; private set; }
+        Dispose(false);
+    }
 
-        ~Disposable()
+    public void Dispose()
+    {
+        if (Disposed)
         {
-            Dispose(false);
+            return;
         }
 
-        public void Dispose()
-        {
-            if (Disposed)
-            {
-                return;
-            }
+        Dispose(true);
+        Disposed = true;
+        GC.SuppressFinalize(this);
+    }
 
-            Dispose(true);
-            Disposed = true;
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-        }
+    protected virtual void Dispose(bool disposing)
+    {
     }
 }
