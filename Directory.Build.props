@@ -4,7 +4,7 @@
     <MajorVersion>0</MajorVersion>
     <MinorVersion>1</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-005</PreReleaseLabel>
+    <PreReleaseLabel>dev</PreReleaseLabel>
   </PropertyGroup>
   <PropertyGroup>
     <VersionPrefix>$(MajorVersion).$(MinorVersion).$(PatchVersion)</VersionPrefix>
