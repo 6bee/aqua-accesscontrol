@@ -45,12 +45,12 @@ internal static class TypeHelper
         }
 
         var interfaces = type.GetInterfaces();
-        if (interfaces != null)
+        if (interfaces is not null)
         {
             foreach (var interfaceType in interfaces)
             {
                 var enumerableType = FindIEnumerable(interfaceType);
-                if (enumerableType != null)
+                if (enumerableType is not null)
                 {
                     return enumerableType;
                 }

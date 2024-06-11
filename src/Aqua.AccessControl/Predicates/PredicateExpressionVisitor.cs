@@ -43,9 +43,9 @@ internal sealed class PredicateExpressionVisitor
         }
 
         _globalPredicates = predicates
-            .Where(x => !(x is ITypePredicate))
-            .Where(x => !(x is IPropertyPredicate))
-            .Where(x => !(x is IPropertyProjection))
+            .Where(x => x is not ITypePredicate)
+            .Where(x => x is not IPropertyPredicate)
+            .Where(x => x is not IPropertyProjection)
             .ToArray();
     }
 
@@ -239,8 +239,7 @@ internal sealed class PredicateExpressionVisitor
         protected override Expression VisitConstant(ConstantExpression node)
         {
             var expression = base.VisitConstant(node);
-            var constantExpression = expression as ConstantExpression;
-            if (constantExpression != null)
+            if (expression is ConstantExpression constantExpression)
             {
                 var isSingleElement = false;
                 var runtimeType = constantExpression.Value?.GetType();
@@ -274,11 +273,11 @@ internal sealed class PredicateExpressionVisitor
 
         private Expression ApplyTypeFilters(Expression expression, Type type, bool isSingleElement)
         {
-            if (type != null)
+            if (type is not null)
             {
                 var typePredicates = GetTypePredicates(type).ToArray();
                 var propertyProjections = GetPropertyProjections(type).ToArray();
-                if (typePredicates.Any() || propertyProjections.Any())
+                if (typePredicates.Length > 0 || propertyProjections.Length > 0)
                 {
                     expression = _scope.GetSubstitute(expression);
 
@@ -295,7 +294,7 @@ internal sealed class PredicateExpressionVisitor
                         }
                     }
 
-                    if (propertyProjections.Any())
+                    if (propertyProjections.Length > 0)
                     {
                         expression = PropertyProjectionHelper.Apply(propertyProjections, expression, type);
                     }

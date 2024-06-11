@@ -15,19 +15,19 @@ internal static class MethodInfos
 
         private static readonly MethodInfo _firstOrDefaultMethodInfo = typeof(System.Linq.Enumerable).GetMethods()
             .Where(x => string.Equals(x.Name, nameof(System.Linq.Enumerable.FirstOrDefault)))
-            .Single(x => x.GetParameters().Length == 1);
+            .Single(x => x.GetParameters().Length is 1);
 
         private static readonly MethodInfo _selectMethodInfo = typeof(System.Linq.Enumerable).GetMethods()
             .Where(x => string.Equals(x.Name, nameof(System.Linq.Enumerable.Select)))
-            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments.Length == 2);
+            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments.Length is 2);
 
         private static readonly MethodInfo _singleOrDefaultMethodInfo = typeof(System.Linq.Enumerable).GetMethods()
             .Where(x => string.Equals(x.Name, nameof(System.Linq.Enumerable.SingleOrDefault)))
-            .Single(x => x.GetParameters().Length == 1);
+            .Single(x => x.GetParameters().Length is 1);
 
         private static readonly MethodInfo _whereMethodInfo = typeof(System.Linq.Enumerable).GetMethods()
             .Where(x => string.Equals(x.Name, nameof(System.Linq.Enumerable.Where)))
-            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments.Length == 2);
+            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments.Length is 2);
 
         public static MethodInfo Cast(Type t) => _castMethodInfo.MakeGenericMethod(t);
 
@@ -47,11 +47,11 @@ internal static class MethodInfos
 
         private static readonly MethodInfo _selectMethodInfo = typeof(System.Linq.Queryable).GetMethods()
             .Where(x => string.Equals(x.Name, nameof(System.Linq.Queryable.Select)))
-            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments[0].GenericTypeArguments.Length == 2);
+            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments[0].GenericTypeArguments.Length is 2);
 
         private static readonly MethodInfo _whereMethodInfo = typeof(System.Linq.Queryable).GetMethods()
             .Where(x => string.Equals(x.Name, nameof(System.Linq.Queryable.Where)))
-            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments[0].GenericTypeArguments.Length == 2);
+            .Single(x => x.GetParameters()[1].ParameterType.GenericTypeArguments[0].GenericTypeArguments.Length is 2);
 
         public static MethodInfo Cast(Type t) => _castMethodInfo.MakeGenericMethod(t);
 
