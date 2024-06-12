@@ -10,11 +10,13 @@
 
 Query filters for linq expressions.
 
-## Samples
+## Features
 
 ### Global Predicate
 
-Predicates can be based on progam logic or on expanded data query.
+Global predicates apply to a query as a whole and must be satisfied for any results be returned.
+
+Predicates can be based on progam logic and/or on expanded data query:
 
 ```C#
 // base query
@@ -37,7 +39,9 @@ var result2 = query
 
 ### Type Predicate
 
-The following predicate filters out records which have not tenant ID 1.
+Type predicates apply to specific record types within a query by filtering out corresponding records that do not satisfy the condition.
+
+The following predicate filters out records which have not `TenantId` equal to 1:
 
 ```C#
 var query =
@@ -50,7 +54,9 @@ var result = query
 
 ### Property Predicate
 
-The following predicate retrieves product prices only for records which have tenant ID 1, other records have the `Price` property not set.
+Property predicates do not filter out records but allow property values to be returned only when specified conditions are satisfied.
+
+The following predicate retrieves product prices only for records which have `TenantId` equal to 1, other records have the `Price` property set to it's default vaule:
 
 ```C#
 var query =
@@ -58,6 +64,24 @@ var query =
     select new { p.Id, p.Price };
 var result = query
     .Apply(Predicate.Create<Product, decimal>(p => p.Price, p => p.TenantId == 1))
+    .ToList();
+```
+
+### Property Projection Predicate
+
+Property projection predicates allow to project values of a certain property based on custom logic.
+
+In the following example, a 10% discount is applied if `TenantId` is equal to 1:
+
+```C#
+var query =
+    from p in repo.Products
+    select new { p.Id, p.Price };
+
+var result = query
+    .Apply(Predicate.CreatePropertyProjection<Product, decimal>(
+        p => p.Price,
+        p => p.TenantId == 1 ? p.Price * 0.9m : p.Price))
     .ToList();
 ```
 
