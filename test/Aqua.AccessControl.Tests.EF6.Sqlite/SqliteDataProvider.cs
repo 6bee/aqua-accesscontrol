@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Tests.SQLite.EF6;
+namespace Aqua.AccessControl.Tests.EF6.Sqlite;
 
 using Aqua.AccessControl.Tests.DataModel;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +8,7 @@ using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
 
-public class SQLiteDataProvider : DbContext, IDataProvider
+public class SqliteDataProvider : DbContext, IDataProvider
 {
     private static string SQLiteConnectionString =>
         new SQLiteConnectionStringBuilder
@@ -17,7 +17,7 @@ public class SQLiteDataProvider : DbContext, IDataProvider
             ForeignKeys = true,
         }.ConnectionString;
 
-    public SQLiteDataProvider()
+    public SqliteDataProvider()
         : base(new SQLiteConnection(SQLiteConnectionString), true)
     {
     }

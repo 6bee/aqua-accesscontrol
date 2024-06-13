@@ -56,8 +56,8 @@ jobs:
       run: |
         dotnet build Aqua.AccessControl.sln -c Release /bl
         dotnet test test\Aqua.AccessControl.Tests -c Release
-        dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6 -c Release
-        dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore -c Release
+        dotnet test test\Aqua.AccessControl.Tests.EF6.Sqlite -c Release
+        dotnet test test\Aqua.AccessControl.Tests.EFCore.Sqlite -c Release
       
     - name: Upload build log
       uses: actions/upload-artifact@v4

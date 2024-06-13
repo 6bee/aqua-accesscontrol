@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Tests.SQLite.EF6;
+namespace Aqua.AccessControl.Tests.EF6.Sqlite;
 
 using Aqua.AccessControl.Predicates;
 using Aqua.AccessControl.Tests.DataModel;
@@ -10,7 +10,7 @@ using Xunit;
 
 public class When_applying_type_predicate : Tests.When_applying_type_predicate
 {
-    protected override IDataProvider DataProvider { get; } = new SQLiteDataProvider();
+    protected override IDataProvider DataProvider { get; } = new SqliteDataProvider();
 
     [Fact]
     public void Should_apply_predicate_to_joined_entity_not_part_of_select()

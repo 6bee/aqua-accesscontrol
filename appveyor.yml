@@ -24,8 +24,8 @@ build_script:
 
 test_script:
   - dotnet test test\Aqua.AccessControl.Tests --settings coverlet.runsettings
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EF6 --settings coverlet.runsettings
-  - dotnet test test\Aqua.AccessControl.Tests.SQLite.EFCore --settings coverlet.runsettings
+  - dotnet test test\Aqua.AccessControl.Tests.EF6.Sqlite --settings coverlet.runsettings
+  - dotnet test test\Aqua.AccessControl.Tests.EFCore.Sqlite --settings coverlet.runsettings
 
 after_test:
   - codecov -f **\coverage.cobertura.xml

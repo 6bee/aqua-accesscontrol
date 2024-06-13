@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Tests.SQLite.EF6;
+namespace Aqua.AccessControl.Tests.EF6.Sqlite;
 
 using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 
-public class SQLiteDatabaseInitializer : IDatabaseInitializer<SQLiteDataProvider>
+public class SqliteDatabaseInitializer : IDatabaseInitializer<SqliteDataProvider>
 {
     private const string Ddl = @"
 DROP TABLE IF EXISTS [OrderItems];
@@ -65,13 +65,13 @@ CREATE TABLE IF NOT EXISTS [OrderItems](
 );
 ";
 
-    public void InitializeDatabase(SQLiteDataProvider context)
+    public void InitializeDatabase(SqliteDataProvider context)
     {
         InitializeDatabaseObjects(context);
         InitializeDataRecords(context);
     }
 
-    private void InitializeDataRecords(SQLiteDataProvider context)
+    private void InitializeDataRecords(SqliteDataProvider context)
     {
         void Add<T>(IQueryable<T> source) where T : class
         {
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS [OrderItems](
         Add(source.Orders);
     }
 
-    private static void InitializeDatabaseObjects(SQLiteDataProvider context)
+    private static void InitializeDatabaseObjects(SqliteDataProvider context)
     {
         var connection = context.Database.Connection;
         connection.Open();

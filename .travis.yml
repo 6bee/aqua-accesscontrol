@@ -41,4 +41,4 @@ before_script:
 
 script:
   - dotnet test test/Aqua.AccessControl.Tests               -c $CONFIGURATION -f net8.0
-  - dotnet test test/Aqua.AccessControl.Tests.SQLite.EFCore -c $CONFIGURATION -f net8.0
+  - dotnet test test/Aqua.AccessControl.Tests.EFCore.Sqlite -c $CONFIGURATION -f net8.0

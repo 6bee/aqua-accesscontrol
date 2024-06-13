@@ -1,17 +1,17 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.AccessControl.Tests.SQLite.EFCore;
+namespace Aqua.AccessControl.Tests.EFCore.SqlServer;
 
 using Aqua.AccessControl.Tests.DataModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
 
-public class SQLiteDataContext : DbContext
+public class SqlServerDataContext : DbContext
 {
     private readonly string _connectionString;
 
-    public SQLiteDataContext(string connectionString)
+    public SqlServerDataContext(string connectionString)
     {
         _connectionString = connectionString;
     }
@@ -22,7 +22,7 @@ public class SQLiteDataContext : DbContext
 
         optionsBuilder
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-            .UseSqlite(_connectionString);
+            .UseSqlServer(_connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
