@@ -36,9 +36,9 @@ internal sealed class PredicateExpressionVisitor
             .Where(x => x.Count() > 1)
             .ToArray();
 
-        if (collisions.Any())
+        if (collisions.Length > 0)
         {
-            var message = $"Multiple predicates and/or projections defined for propert{(collisions.Count() > 1 ? "ies" : "y")}: {string.Join("; ", collisions.Select(x => $"{x.Key.Type}.{x.Key.Property.Name}"))}";
+            var message = $"Multiple predicates and/or projections defined for propert{(collisions.Length > 1 ? "ies" : "y")}: {string.Join("; ", collisions.Select(x => $"{x.Key.Type}.{x.Key.Property.Name}"))}";
             throw new ArgumentException(message, nameof(predicates));
         }
 
@@ -60,7 +60,7 @@ internal sealed class PredicateExpressionVisitor
             private readonly Visitor _visitor;
             private readonly Dictionary<Expression, Expression> _substitutes;
             private readonly Dictionary<Expression, bool> _isSubstituted;
-            private readonly List<Expression> _filterExpressions = new List<Expression>();
+            private readonly List<Expression> _filterExpressions = [];
             private bool _isSelect = false;
 
             public Scope(Visitor visitor)
@@ -77,11 +77,11 @@ internal sealed class PredicateExpressionVisitor
                 _visitor._scope = this;
             }
 
-            public bool IsSelectScope => _isSelect || (_parent?.IsSelectScope ?? false);
+            public bool IsSelectScope => _isSelect || _parent?.IsSelectScope is true;
 
             public void Dispose() => _visitor._scope = _parent!;
 
-            public Scope Push() => new Scope(this, _visitor);
+            public Scope Push() => new(this, _visitor);
 
             public IDisposable PushSubstitute(Expression expression, MethodCallExpression node)
             {
@@ -132,7 +132,7 @@ internal sealed class PredicateExpressionVisitor
 
             public MethodCallExpression PrependFilters(MethodCallExpression node)
             {
-                if (_isSelect && _filterExpressions.Any())
+                if (_isSelect && _filterExpressions.Count > 0)
                 {
                     var quoteExpression = node.Arguments.Last() as UnaryExpression;
                     if (quoteExpression?.NodeType != ExpressionType.Quote)
@@ -151,7 +151,7 @@ internal sealed class PredicateExpressionVisitor
                     var select = node;
                     var queryable = select.Arguments.First();
                     var elementType = TypeHelper.GetElementType(queryable.Type) ?? queryable.Type;
-                    var where = MethodInfos.Queryable.Where(elementType); // TODO: whould where take 'elementType' or 'queryable.Type'?
+                    var where = MethodInfos.Queryable.Where(elementType);
                     foreach (var filter in _filterExpressions)
                     {
                         var predicate = Expression.Lambda(filter, parameter);
@@ -231,9 +231,71 @@ internal sealed class PredicateExpressionVisitor
 
             using (_scope.PushMethodCall(node))
             {
-                var exp = (MethodCallExpression)base.VisitMethodCall(node);
+                var method = node.Method;
+                MethodCallExpression? exp = null;
+                if (method.DeclaringType.Name.Contains("EntityFramework") &&
+                    method.Name is "Include" or "ThenInclude" &&
+                    method.IsGenericMethod)
+                {
+                    // fix-up method call for Include/ThenInclude if generic type argument changed
+
+                    var instance = Visit(node.Object);
+                    var arguments = node.VisitArguments(this);
+                    if (ReferenceEquals(instance, node.Object) && arguments is null)
+                    {
+                        exp = node;
+                    }
+                    else
+                    {
+                        var parameters = method.GetParameters();
+                        if (parameters.Length is 2 && arguments?.Count is 2)
+                        {
+                            var parameter2 = parameters[1].ParameterType;
+                            var argument2 = arguments[1].Type;
+                            if (parameter2 is not null &&
+                                argument2 is not null &&
+
+                                !parameter2.IsAssignableFrom(argument2) &&
+
+                                parameter2.IsGenericType &&
+                                parameter2.Implements(typeof(Expression<>), out var paramLambdaType) &&
+                                paramLambdaType[0].Implements(typeof(Func<,>), out var paramFuncTypes) &&
+                                paramFuncTypes[1].Implements(typeof(IEnumerable<>), out var paramElementType) &&
+
+                                argument2.IsGenericType &&
+                                argument2.Implements(typeof(Expression<>), out var lambdaType) &&
+                                lambdaType[0].Implements(typeof(Func<,>), out var funcTypes) &&
+                                funcTypes[1].Implements(typeof(IEnumerable<>), out var elementType) &&
+
+                                paramFuncTypes[0] == funcTypes[0])
+                            {
+                                var types = method.Name is "Include"
+                                    ? funcTypes // Include has two generic arguments
+                                    : funcTypes.Prepend(method.GetGenericArguments()[0]).ToArray(); // ThenInclude has three generic arguments
+                                method = method.GetGenericMethodDefinition().MakeGenericMethod(types);
+                            }
+                        }
+
+                        exp = Expression.Call(instance, method, arguments);
+                    }
+                }
+                else
+                {
+                    exp = (MethodCallExpression)base.VisitMethodCall(node);
+                }
+
                 return _scope.PrependFilters(exp);
             }
+        }
+
+        protected override Expression VisitLambda<T>(Expression<T> node)
+        {
+            var body = Visit(node.Body);
+            var parameters = node.VisitParameters(this);
+
+            return ReferenceEquals(body, node.Body) && parameters is null
+                ? node
+                : Expression.Lambda(body, parameters ?? node.Parameters);
         }
 
         protected override Expression VisitConstant(ConstantExpression node)
