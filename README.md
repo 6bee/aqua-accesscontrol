@@ -56,7 +56,7 @@ var result = query
 
 Property predicates do not filter out records but allow property values to be returned only when specified conditions are satisfied.
 
-The following predicate retrieves product prices only for records which have `TenantId` equal to 1, other records have the `Price` property set to it's default vaule:
+The following predicate retrieves product prices only for records which have `TenantId` equal to 1, other records have the `Price` property set to its default vaule:
 
 ```C#
 var query =
