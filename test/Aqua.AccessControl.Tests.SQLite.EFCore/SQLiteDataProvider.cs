@@ -3,15 +3,17 @@
 namespace Aqua.AccessControl.Tests.SQLite.EFCore;
 
 using Aqua.AccessControl.Tests.DataModel;
+using System;
 using System.Linq;
 
-public class SQLiteDataProvider : Disposable, IDataProvider
+public class SQLiteDataProvider : IDataProvider
 {
     private readonly SQLiteDataContext _dataContext;
 
     public SQLiteDataProvider()
     {
-        _dataContext = new SQLiteDataContext();
+        var connectionString = $"DataSource=testdb-{Guid.NewGuid()}.sqlite;";
+        _dataContext = new SQLiteDataContext(connectionString);
         var created = _dataContext.Database.EnsureCreated();
         if (created)
         {
@@ -19,12 +21,10 @@ public class SQLiteDataProvider : Disposable, IDataProvider
         }
     }
 
-    protected override void Dispose(bool disposing)
+    public void Dispose()
     {
-        if (disposing && !Disposed)
-        {
-            _dataContext.Database.EnsureDeleted();
-        }
+        _dataContext.Database.EnsureDeleted();
+        _dataContext.Dispose();
     }
 
     public IQueryable<Tenant> Tenants => _dataContext.Tenants;
@@ -36,4 +36,8 @@ public class SQLiteDataProvider : Disposable, IDataProvider
     public IQueryable<Product> Products => _dataContext.Products;
 
     public IQueryable<Order> Orders => _dataContext.Orders;
+
+    public IQueryable<Parent> Parents => _dataContext.Parents;
+
+    public IQueryable<Child> Children => _dataContext.Children;
 }

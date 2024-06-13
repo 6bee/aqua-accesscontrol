@@ -17,4 +17,8 @@ public interface IDataProvider : IDisposable
     IQueryable<Product> Products { get; }
 
     IQueryable<Order> Orders { get; }
+
+    IQueryable<Parent> Parents { get; }
+
+    IQueryable<Child> Children { get; }
 }

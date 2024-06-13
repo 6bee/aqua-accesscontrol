@@ -20,7 +20,9 @@ public class SqlServerDataContext : DbContext
     {
         base.OnConfiguring(optionsBuilder);
 
-        optionsBuilder.UseSqlServer(_connectionString);
+        optionsBuilder
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+            .UseSqlServer(_connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,6 +50,21 @@ public class SqlServerDataContext : DbContext
 
         var orderItemModel = modelBuilder.Entity<OrderItem>();
 
+        var parentModel = modelBuilder.Entity<Parent>();
+        parentModel
+            .HasMany(x => x.Children)
+            .WithOne()
+            .HasForeignKey("ParentId");
+        var childModel = modelBuilder.Entity<Child>();
+        childModel
+            .HasOne(x => x.Parent)
+            .WithMany()
+            .HasForeignKey("ParentId");
+        childModel
+            .HasOne(x => x.Self)
+            .WithOne()
+            .HasForeignKey(typeof(Child), nameof(Child.Id));
+
         var pkProperty = typeof(Entity).GetProperty(nameof(Entity.Id));
         var primaryKeys = (
             from type in modelBuilder.Model.GetEntityTypes()
@@ -71,4 +88,8 @@ public class SqlServerDataContext : DbContext
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
+
+    public virtual DbSet<Parent> Parents { get; set; }
+
+    public virtual DbSet<Child> Children { get; set; }
 }

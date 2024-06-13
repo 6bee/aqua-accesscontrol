@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 public static class Helper
 {
-    public static string CleanMessage(this Exception exception)
+    public static string GetCleanMessage(this Exception exception)
     {
         var message = exception?.Message.Replace("\r\n", "\n");
         if (!string.IsNullOrEmpty(message))

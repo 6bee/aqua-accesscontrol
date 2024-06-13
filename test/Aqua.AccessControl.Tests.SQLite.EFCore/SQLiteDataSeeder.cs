@@ -8,11 +8,9 @@ public class SQLiteDataSeeder
 {
     public void Seed(SQLiteDataContext context)
     {
-        void Add<T>(IQueryable<T> source) where T : class
-        {
-            context.Set<T>().AddRange(source);
-            context.SaveChanges();
-        }
+        void Add<T>(IQueryable<T> source)
+            where T : class
+            => context.Set<T>().AddRange(source);
 
         using var source = new InMemoryDataProvider();
 
@@ -21,5 +19,9 @@ public class SQLiteDataSeeder
         Add(source.ProductCategories);
         Add(source.Products);
         Add(source.Orders);
+        Add(source.Parents);
+        Add(source.Children);
+
+        context.SaveChanges();
     }
 }

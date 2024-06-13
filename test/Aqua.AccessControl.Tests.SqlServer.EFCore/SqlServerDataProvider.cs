@@ -6,19 +6,23 @@ using Aqua.AccessControl.Tests.DataModel;
 using System;
 using System.Linq;
 
-public class SqlServerDataProvider : Disposable, IDataProvider
+public class SqlServerDataProvider : IDataProvider
 {
     private readonly SqlServerDataContext _dataContext;
 
     public SqlServerDataProvider()
-        : this(null, null)
+        : this(null, null, null)
     {
     }
 
-    public SqlServerDataProvider(string username, string passeword)
+    public SqlServerDataProvider(string database, string username, string passeword)
     {
         var connectionString =
-              $"Server=.;Database=testdb-{Guid.NewGuid()};User Id={username ?? "sa"};Password = {passeword ?? "sa(!)Password"};TrustServerCertificate=True";
+              $"Server=.;" +
+              $"Database={database ?? $"testdb -{Guid.NewGuid()}"};" +
+              $"User Id={username ?? "sa"};" +
+              $"Password={passeword ?? "sa(!)Password"};" +
+              $"TrustServerCertificate=True";
         _dataContext = new SqlServerDataContext(connectionString);
         var created = _dataContext.Database.EnsureCreated();
         if (created)
@@ -27,12 +31,10 @@ public class SqlServerDataProvider : Disposable, IDataProvider
         }
     }
 
-    protected override void Dispose(bool disposing)
+    public void Dispose()
     {
-        if (disposing && !Disposed)
-        {
-            _dataContext.Database.EnsureDeleted();
-        }
+        _dataContext.Database.EnsureDeleted();
+        _dataContext.Dispose();
     }
 
     public IQueryable<Tenant> Tenants => _dataContext.Tenants;
@@ -44,4 +46,8 @@ public class SqlServerDataProvider : Disposable, IDataProvider
     public IQueryable<Product> Products => _dataContext.Products;
 
     public IQueryable<Order> Orders => _dataContext.Orders;
+
+    public IQueryable<Parent> Parents => _dataContext.Parents;
+
+    public IQueryable<Child> Children => _dataContext.Children;
 }

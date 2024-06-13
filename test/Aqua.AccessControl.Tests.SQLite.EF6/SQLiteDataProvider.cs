@@ -62,6 +62,10 @@ public class SQLiteDataProvider : DbContext, IDataProvider
 
     public virtual DbSet<Order> Orders { get; set; }
 
+    public virtual DbSet<Parent> Parents { get; set; }
+
+    public virtual DbSet<Child> Children { get; set; }
+
     IQueryable<Tenant> IDataProvider.Tenants => Tenants;
 
     IQueryable<Claim> IDataProvider.Claims => Claims;
@@ -71,4 +75,8 @@ public class SQLiteDataProvider : DbContext, IDataProvider
     IQueryable<Product> IDataProvider.Products => Products;
 
     IQueryable<Order> IDataProvider.Orders => Orders;
+
+    IQueryable<Parent> IDataProvider.Parents => Parents;
+
+    IQueryable<Child> IDataProvider.Children => Children;
 }

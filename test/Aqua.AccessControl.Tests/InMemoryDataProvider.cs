@@ -6,13 +6,15 @@ using Aqua.AccessControl.Tests.DataModel;
 using System.Collections.Generic;
 using System.Linq;
 
-public class InMemoryDataProvider : Disposable, IDataProvider
+public class InMemoryDataProvider : IDataProvider
 {
     private readonly IEnumerable<Tenant> _tenants;
     private readonly IEnumerable<Claim> _claims;
     private readonly IEnumerable<ProductCategory> _productCategories;
     private readonly IEnumerable<Product> _products;
     private readonly IEnumerable<Order> _orders;
+    private readonly IEnumerable<Parent> _parents;
+    private readonly IEnumerable<Child> _children;
 
     public InMemoryDataProvider()
     {
@@ -68,6 +70,28 @@ public class InMemoryDataProvider : Disposable, IDataProvider
             },
         ];
 
+        _parents =
+        [
+            new Parent { Id = 1, Children = [] },
+            new Parent { Id = 2, Children = [] },
+        ];
+
+        Parent Parent(long id) => _parents.Single(x => x.Id == id);
+
+        _children =
+        [
+            new Child { Id = 11, Parent = Parent(1) },
+            new Child { Id = 12, Parent = Parent(1) },
+            new Child { Id = 21, Parent = Parent(2) },
+            new Child { Id = 22, Parent = Parent(2) },
+        ];
+
+        foreach (var item in _children)
+        {
+            item.Self = item;
+            item.Parent.Children.Add(item);
+        }
+
         foreach (var order in _orders)
         {
             foreach (var item in order.Items)
@@ -86,4 +110,12 @@ public class InMemoryDataProvider : Disposable, IDataProvider
     public IQueryable<Product> Products => _products.AsQueryable();
 
     public IQueryable<Order> Orders => _orders.AsQueryable();
+
+    public IQueryable<Parent> Parents => _parents.AsQueryable();
+
+    public IQueryable<Child> Children => _children.AsQueryable();
+
+    public void Dispose()
+    {
+    }
 }

@@ -4,6 +4,7 @@ namespace Aqua.AccessControl.Tests.SQLite.EFCore;
 
 using Aqua.AccessControl.Predicates;
 using Aqua.AccessControl.Tests.DataModel;
+using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using System.Linq;
 using Xunit;
@@ -74,5 +75,90 @@ public class When_applying_type_predicate : Tests.When_applying_type_predicate
         result.Count.ShouldBe(2);
         result.ShouldContain(1110);
         result.ShouldContain(1120);
+    }
+
+    [Fact]
+    public void Should_appy_predicate_targeting_child_collection_items_with_eager_loading()
+    {
+        var repo = DataProvider;
+
+        var query = repo.Orders.Include(x => x.Items);
+
+        var result = query
+            .Apply(Predicate.Create<Order>(x => x.Items.All(i => i.Price < 1000)))
+            .ToList();
+
+        result.ShouldHaveSingleItem()
+            .Id.ShouldBe(1000);
+    }
+
+    [Fact]
+    public void Should_appy_predicate_targeting_child_collection_items_without_eager_loading()
+    {
+        var repo = DataProvider;
+
+        var query = repo.Orders;
+
+        var result = query
+            .Apply(Predicate.Create<Order>(x => x.Items.All(i => i.Price < 1000)))
+            .ToList();
+
+        result.ShouldHaveSingleItem()
+            .Id.ShouldBe(1000);
+    }
+
+    [Fact]
+    public void Should_appy_predicate_to_child_collection_added_via_include()
+    {
+        var repo = DataProvider;
+
+        IQueryable<Order> query = repo.Orders.Include(x => x.Items);
+
+        query = query.Apply(Predicate.Create<OrderItem>(x => x.Price > 10 && x.Price < 1000));
+
+        var result = query.ToList();
+
+        var items = result.SelectMany(x => x.Items).Select(x => x.Id).ToList();
+        items.Count.ShouldBe(2);
+        items.ShouldContain(1120);
+        items.ShouldContain(2210);
+    }
+
+    [Fact]
+    public void Should_appy_predicate_to_child_collection_added_via_include_with_splitquery()
+    {
+        var repo = DataProvider;
+
+        IQueryable<Order> query = repo.Orders
+            .Include(x => x.Items)
+            .AsSplitQuery();
+
+        query = query.Apply(Predicate.Create<OrderItem>(x => x.Price > 10 && x.Price < 1000));
+
+        var result = query.ToList();
+
+        var items = result.SelectMany(x => x.Items).Select(x => x.Id).ToList();
+        items.Count.ShouldBe(2);
+        items.ShouldContain(1120);
+        items.ShouldContain(2210);
+    }
+
+    [Fact]
+    public void Should_appy_predicate_to_child_collection_added_via_then_include()
+    {
+        var repo = DataProvider;
+
+        IQueryable<Child> query = repo.Children
+            .Include(x => x.Parent)
+            .ThenInclude(x => x.Children);
+
+        query = query.Apply(Predicate.Create<Child>(x => x.Id == 21));
+
+        var result = query.ToList();
+
+        result.ShouldHaveSingleItem()
+            .Parent.ShouldNotBeNull()
+            .Children.ShouldHaveSingleItem()
+            .Id.ShouldBe(21);
     }
 }
