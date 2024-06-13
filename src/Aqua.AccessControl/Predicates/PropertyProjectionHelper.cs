@@ -12,7 +12,7 @@ internal static class PropertyProjectionHelper
 {
     private sealed class MemberEqualityComparer : IEqualityComparer<MemberInfo>
     {
-        public static readonly MemberEqualityComparer Instance = new MemberEqualityComparer();
+        public static readonly MemberEqualityComparer Instance = new();
 
         private MemberEqualityComparer()
         {

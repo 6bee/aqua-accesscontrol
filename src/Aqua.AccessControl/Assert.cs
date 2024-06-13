@@ -12,8 +12,7 @@ internal static class Assert
     {
         memberInfo.AssertNotNull(parameterName);
 
-        var propertyInfo = memberInfo as PropertyInfo;
-        if (propertyInfo is null)
+        if (memberInfo is not PropertyInfo propertyInfo)
         {
             throw new ArgumentException($"Expected {parameterName} to be property selector");
         }
