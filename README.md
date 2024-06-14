@@ -7,7 +7,7 @@
 | ---    | ---                     | ---                            |
 | `main` | [![Build status][5]][6] | [![Travis build Status][7]][8] |
 
-| package              | NuGet                  | MyGet                        |
+| package              | nuget                  | myget                        |
 | ---                  | ---                    | ---                          |
 | `aqua-accesscontrol` | [![NuGet Badge][1]][2] | [![MyGet Pre Release][3]][4] |
 
