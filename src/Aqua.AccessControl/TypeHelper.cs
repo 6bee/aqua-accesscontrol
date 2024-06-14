@@ -11,7 +11,7 @@ using System.Linq;
 internal static class TypeHelper
 {
     public static bool IsEnumerableType(Type type)
-        => !ReferenceEquals(type, null)
+        => type is not null
         && type != typeof(string)
         && typeof(IEnumerable).IsAssignableFrom(type);
 

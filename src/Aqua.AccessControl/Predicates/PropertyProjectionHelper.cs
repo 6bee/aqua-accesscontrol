@@ -19,18 +19,16 @@ internal static class PropertyProjectionHelper
         }
 
         public bool Equals(MemberInfo x, MemberInfo y)
-            => CreateObj(x).Equals(CreateObj(y));
+            => x is not null
+            && y is not null
+            && x.MemberType.Equals(y.MemberType)
+            && x.Name.Equals(y.Name)
+            && x.DeclaringType.Equals(y.DeclaringType);
 
         public int GetHashCode(MemberInfo obj)
-            => CreateObj(obj).GetHashCode();
-
-        private static object CreateObj(MemberInfo m)
-            => new
-            {
-                m.MemberType,
-                m.Name,
-                m.DeclaringType,
-            };
+            => obj is null
+            ? 0
+            : HashCode.Combine(obj.MemberType, obj.Name, obj.DeclaringType);
     }
 
     internal static Expression Apply(IEnumerable<IPropertyProjection> propertyProjections, Expression expression, Type type)

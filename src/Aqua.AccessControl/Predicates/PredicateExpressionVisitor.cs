@@ -216,7 +216,7 @@ internal sealed class PredicateExpressionVisitor
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (!ReferenceEquals(node.Object, null))
+            if (node.Object is not null)
             {
                 using (_scope.PushSubstitute(node.Object, node))
                 {
