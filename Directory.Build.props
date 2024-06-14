@@ -24,8 +24,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <EmbedAllSources>true</EmbedAllSources>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageOutputPath Condition="'$(PackageOutputPath)'==''">$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
+    <GeneratePackageOnBuild Condition=" '$(GeneratePackageOnBuild)' == '' ">false</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)aqua-small.png" Pack="true" Visible="false" PackagePath=""/>
