@@ -55,7 +55,9 @@ var query =
     from p in repo.Products
     select new { p.Id, p.Price };
 var result = query
-    .Apply(Predicate.Create<Product, decimal>(p => p.Price, p => p.TenantId == 1))
+    .Apply(Predicate.Create<Product, decimal>(
+        p => p.Price,
+        p => p.TenantId == 1))
     .ToList();
 ```
 
