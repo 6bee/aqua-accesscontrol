@@ -3,9 +3,13 @@
 [![GitHub license][lic-badge]][lic-link]
 [![Github Workflow][pub-badge]][pub-link]
 
-| branch | package                                             | AppVeyor                | Travis CI                      |
-| ---    | ---                                                 | ---                     | ---                            |
-| `main` | [![NuGet Badge][1]][2] [![MyGet Pre Release][3]][4] | [![Build status][5]][6] | [![Travis build Status][7]][8] |
+| branch | AppVeyor                | Travis CI                      |
+| ---    | ---                     | ---                            |
+| `main` | [![Build status][5]][6] | [![Travis build Status][7]][8] |
+
+| package              | NuGet                  | MyGet                        |
+| ---                  | ---                    | ---                          |
+| `aqua-accesscontrol` | [![NuGet Badge][1]][2] | [![MyGet Pre Release][3]][4] |
 
 ## Description
 
