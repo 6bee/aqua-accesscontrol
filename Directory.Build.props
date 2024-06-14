@@ -17,6 +17,7 @@
     <Authors>Christof Senn</Authors>
     <PackageIcon>aqua-small.png</PackageIcon>
     <PackageProjectUrl>https://github.com/6bee/aqua-accesscontrol</PackageProjectUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/6bee/aqua-accesscontrol.git</RepositoryUrl>

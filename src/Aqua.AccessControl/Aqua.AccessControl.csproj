@@ -1,17 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>[Experimental] Query filters for linq expressions</Description>
+    <Description>Query filters for linq expressions</Description>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Aqua.AccessControl</AssemblyName>
-    <PackageId>aqua-accesscontrol</PackageId>
-    <PackageTags></PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>aqua-accesscontrol</PackageId>
+    <PackageTags>linq queryable expression filter predicate fluent access</PackageTags>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <None Include="PACKAGE.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
